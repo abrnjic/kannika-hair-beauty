@@ -37,7 +37,7 @@ The browser loads Firebase Auth from Google's CDN only when a live request is su
 
 Requests reuse the same ID for retries during the page session to avoid duplicate writes. A storage failure keeps the form data. If storage succeeds but email fails, the UI explicitly shows that the request is saved and offers an idempotent notification retry plus the salon phone number.
 
-New booking notifications are sent to kannika54932@gmail.com through Resend; client confirmation emails are not automatic. The salon contact email is kannika54932@gmail.com. The salon address is 20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ Bang Lamung District, Chon Buri 20150. The salon telephone is +66 81 727 4874. Social profiles, prices, opening hours and data retention policy still need to be supplied.
+New booking notifications are sent to kannika54932@gmail.com through Resend; client status emails are sent when an administrator saves a decision. The salon contact email is kannika54932@gmail.com. The salon address is 20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ Bang Lamung District, Chon Buri 20150. The salon telephone is +66 81 727 4874. Social profiles, prices, opening hours and data retention policy still need to be supplied.
 
 Run input validation tests with `node --test tests/booking-validation.test.mjs`. The legacy `tests/firebase-integration.html` harness requires the updated booking API to be served as well (not just a static Python server). This creates one clearly labelled synthetic request in Firebase; do not include the test harness in the production `dist` directory.
 
@@ -59,7 +59,7 @@ Google-authenticated, verified users signing in as `kannika54932@gmail.com`, or 
 
 The Google provider must be enabled in Authentication and the production domain must be in its authorised domains. Deploy `firestore.rules` whenever permissions change. Do not add staff role records without owner authorisation.
 
-Decisions do not send email or check for staff/calendar conflicts. Staff must contact clients separately and check availability before confirming.
+Decisions are saved by `/api/booking-status`, which verifies administrator access through Firestore, atomically checks for concurrent changes, and sends the client an English or Thai status email using the language recorded with their booking. Staff must check availability before confirming. Email failures preserve the decision and show an explicit retry message. Re-saving an unchanged decision uses the same email idempotency key.
 
 Run policy and validation checks with `node --test tests/*.test.mjs`.
 
@@ -69,7 +69,7 @@ Brand colour: the logo and emblem SVG wrappers use the exact `--gold` value from
 
 Production admin sign-in uses a full-page Google redirect, with same-origin Firebase auth helper rewrites in `vercel.json`. OAuth client authorised redirect URI: `https://kannika-hair-beauty.vercel.app/__/auth/handler`. Keep this URI and Firebase authorised domains aligned if changing domains. Local preview continues to use popup sign-in.
 
-English and Thai: `/` and `/th/`; administration: `/admin` and `/th/admin`. All public copy, booking controls, validation messages, request downloads, sharing and administrator decisions are translated. Thai uses Noto Sans Thai and Gregorian dates in the Pattaya time zone. Submitted treatment/time/status values remain canonical English keys for compatibility with existing Firebase records and rules. Customer names and notes are preserved verbatim. Edit `translations/th.json`, then run `python3 scripts/build-translations.py` to rebuild the Thai pages and browser dictionary. New online booking requests notify the salon by email; administrator decisions do not send client emails.
+English and Thai: `/` and `/th/`; administration: `/admin` and `/th/admin`. All public copy, booking controls, validation messages, request downloads, sharing and administrator decisions are translated. Thai uses Noto Sans Thai and Gregorian dates in the Pattaya time zone. Submitted treatment/time/status values remain canonical English keys for compatibility with existing Firebase records and rules. Customer names and notes are preserved verbatim. Edit `translations/th.json`, then run `python3 scripts/build-translations.py` to rebuild the Thai pages and browser dictionary. New online booking requests notify the salon by email; administrator decisions send client status emails in the submitted language.
 
 Thai verification (2026-10-16): 15 local tests pass, including canonical booking values in Thai locale and Thai request downloads. A labelled synthetic booking with a Thai name and notes was submitted successfully, displayed in the production Thai admin, confirmed with an exact time, and then declined to close the test. Desktop and 390px mobile Thai layouts were checked.
 
@@ -84,3 +84,9 @@ Thai verification (2026-10-16): 15 local tests pass, including canonical booking
 - Run `node --test tests/*.test.mjs` (24 checks including invalid authentication, owner isolation, safe HTML, duplicate suppression and provider failures).
 
 Live email verification (2026-10-16, Asia/Bangkok): domain `kannikabeauty.com` is verified in Resend. A production Thai booking (`bb34ef1f-7486-42c4-8df0-40a282b965b4`) was saved in Firestore and its bilingual salon notification to `kannika54932@gmail.com` reached **Delivered** in Resend (message `01a14293-f556-7655-bc33-f429c7e524b8`). The synthetic request was then declined in admin. An unauthenticated production API probe returned `authentication_required`. No client email was sent.
+
+## Client status notifications
+
+New requests persist immutable `language` (`en` or `th`) from the booking page. Legacy requests without a language use English, with a visible label in admin. Status templates cover confirmed, declined and awaiting review, including the reference, treatment, salon contacts and Pattaya timezone. Confirmations show the exact confirmed date and time. The recipient and language come exclusively from the saved booking.
+
+`api/booking-status.mjs` delegates to `server/booking-status.mjs`. All database access uses the administrator's Firebase ID token under the deployed rules, including owner-role verification. Changes use a Firestore update-time precondition. Each saved decision's server timestamp forms the Resend idempotency key; unchanged decisions retain their timestamp. Manual retries stop after 23 hours. There is no background retry worker. “Sent” means accepted by Resend; final delivery is available in the Resend dashboard.

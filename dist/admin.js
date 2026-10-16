@@ -1,9 +1,9 @@
 import {t, html, locale, language, localizeValidation} from './i18n.js';
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
 import {initializeAuth, browserSessionPersistence, browserPopupRedirectResolver, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
-import {getFirestore, doc, getDocFromServer, getDocsFromServer, collection, query, orderBy, limit, startAfter, runTransaction, serverTimestamp} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
+import {getFirestore, doc, getDocFromServer, getDocsFromServer, collection, query, orderBy, limit, startAfter} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
 import {firebaseConfig, salonEmail} from './firebase-config.js';
-import {validateDecision, decisionIsCurrent} from './admin-policy.js';
+import {validateDecision} from './admin-policy.js';
 import {bangkokToday} from './booking-validation.js';
 // Use same-origin auth helpers on production so redirect sign-in survives storage partitioning.
 const sameTabSignIn = location.hostname === 'kannika-hair-beauty.vercel.app';
@@ -59,6 +59,7 @@ function showConfirmationFields(){const confirmed=$('#decision-status').value===
 function openRequest(record){
  selected=record;setError('#decision-error');$('#client-name').textContent=record.name||t('Unnamed client');$('#detail-status').textContent=statusLabel(record.status);$('#detail-status').className='status '+record.status;
  const email=node('a',record.email||'—');email.href='mailto:'+encodeURIComponent(record.email||'');$('#client-email').replaceChildren(email);
+ $('#client-language').textContent=record.language==='th'?'ไทย':record.language==='en'?'English':t('English (language not recorded)');
  $('#client-service').textContent=t(record.service||'—');$('#client-visit').textContent=dateLabel(record.date)+' · '+t(record.time)+' ('+t('Pattaya')+')';$('#client-created').textContent=timestampLabel(record.createdAt);$('#client-notes').textContent=record.notes||t('No notes provided.');$('#client-reference').textContent=record.id;
  $('#decision-status').value=record.status;$('#confirmed-date').min=bangkokToday();$('#confirmed-date').value=record.confirmedDate||record.date||'';$('#confirmed-time').value=record.confirmedTime||'';
  $('#updated-label').textContent=record.updatedAt?t('Last updated {date}',{date:timestampLabel(record.updatedAt)}):'';showConfirmationFields();requestDialog.showModal();
@@ -69,18 +70,19 @@ requestDialog.addEventListener('cancel',event=>{if(saving)event.preventDefault()
 $('#decision-form').addEventListener('submit',async event=>{
  event.preventDefault();if(saving||!selected||!administrator)return;setError('#decision-error');
  let decision;try{decision=validateDecision({status:$('#decision-status').value,confirmedDate:$('#confirmed-date').value,confirmedTime:$('#confirmed-time').value})}catch(error){setError('#decision-error',error.message);return}
- saving=true;const currentSession=session, expected=selected, uid=administrator.uid;
+ saving=true;const currentSession=session, expected=selected;
  $('#save-decision').disabled=true;$('#save-decision').textContent=t('Saving decision…');$('#close-request').disabled=true;$('#decision-form').setAttribute('aria-busy','true');
  try{
-  const reference=doc(db,'bookings',expected.id);
-  await runTransaction(db,async transaction=>{
-   const snapshot=await transaction.get(reference);
-   if(!snapshot.exists())throw new Error(t('This request no longer exists. Refresh the list.'));
-   if(!decisionIsCurrent(snapshot.data(),expected))throw new Error(t('This request changed since you opened it. Close this window, refresh, and review it again.'));
-   transaction.update(reference,{...decision,updatedAt:serverTimestamp(),updatedBy:uid});
-  });
+  const token=await administrator.getIdToken();
+  const response=await fetch('/api/booking-status',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify({id:expected.id,decision,expected:{status:expected.status,updatedAt:expected.updatedAt?.toDate?.().getTime()??expected.updatedAt?.toMillis?.()??null}})});
+  const result=await response.json();
+  if(!response.ok||!result.saved)throw new Error(t(response.status===409?'This request changed since you opened it. Close this window, refresh, and review it again.':response.status===403?'You do not have permission to change this request.':'Could not save. Check your connection and try again.'));
   if(currentSession!==session)return;
-  requestDialog.close();toast(t('Decision saved. No email has been sent.'));await loadRequests();
+  selected={...expected,...decision,updatedAt:{toMillis:()=>result.updatedAt}};
+  await loadRequests();
+  if(result.notification==='sent'){requestDialog.close();toast(t('Decision saved. Status email sent to the client.'))}
+  else setError('#decision-error',t(result.notification==='expired'?'This status update is too old to resend safely. Please contact the client directly.':'Decision saved, but the status email could not be sent. Save the same decision again to retry without sending duplicates.'));
+
  }catch(error){if(currentSession===session)setError('#decision-error',error.code==='permission-denied'?t('You do not have permission to change this request.'):error.message||t('Could not save. Check your connection and try again.'))}
  finally{saving=false;$('#save-decision').disabled=false;$('#save-decision').innerHTML=html('Save decision <span>↗</span>');$('#close-request').disabled=false;$('#decision-form').removeAttribute('aria-busy')}
 });

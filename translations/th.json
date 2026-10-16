@@ -288,5 +288,14 @@
   "An email notification has been sent to the salon. Your appointment still requires confirmation.": "ส่งอีเมลแจ้งทางร้านแล้ว การนัดหมายของคุณยังต้องได้รับการยืนยัน",
   "Your request is saved, but we could not send the salon an email notification. Try again below or call +66 81 727 4874.": "บันทึกคำขอของคุณแล้ว แต่ยังส่งอีเมลแจ้งทางร้านไม่สำเร็จ กรุณาลองอีกครั้งด้านล่าง หรือโทร +66 81 727 4874",
   "The salon also receives your request details by email through Resend. We do not send appointment confirmation emails to clients automatically.": "ทางร้านจะได้รับรายละเอียดคำขอของคุณทางอีเมลผ่าน Resend ด้วย ระบบยังไม่ส่งอีเมลยืนยันนัดหมายให้ลูกค้าโดยอัตโนมัติ",
-  "New online appointment requests notify the salon by email. Saving an admin decision changes the status in Firebase; contact the client separately to confirm their appointment.": "คำขอนัดหมายออนไลน์ใหม่จะแจ้งทางร้านทางอีเมล การบันทึกในระบบผู้ดูแลจะเปลี่ยนสถานะใน Firebase กรุณาติดต่อลูกค้าโดยตรงเพื่อยืนยันการนัดหมาย"
+  "New online appointment requests notify the salon by email. Saving an admin decision changes the status in Firebase; contact the client separately to confirm their appointment.": "คำขอนัดหมายออนไลน์ใหม่จะแจ้งทางร้านทางอีเมล การบันทึกในระบบผู้ดูแลจะเปลี่ยนสถานะใน Firebase กรุณาติดต่อลูกค้าโดยตรงเพื่อยืนยันการนัดหมาย",
+  "New requests notify the salon by email. Saving a decision emails the client in the language used for their request.": "คำขอใหม่จะส่งอีเมลแจ้งร้าน เมื่อบันทึกผลการพิจารณา ระบบจะส่งอีเมลแจ้งลูกค้าเป็นภาษาที่ใช้ส่งคำขอ",
+  "Saving a decision emails the client their updated status. Verify staff availability before confirming.": "เมื่อบันทึกผลการพิจารณา ระบบจะส่งอีเมลแจ้งสถานะล่าสุดให้ลูกค้า โปรดตรวจสอบว่าพนักงานว่างก่อนยืนยัน",
+  "Notification language": "ภาษาที่ใช้แจ้งสถานะ",
+  "English (language not recorded)": "อังกฤษ (ไม่ได้บันทึกภาษาของคำขอเดิม)",
+  "Decision saved. Status email sent to the client.": "บันทึกผลการพิจารณาและส่งอีเมลแจ้งสถานะให้ลูกค้าแล้ว",
+  "Decision saved, but the status email could not be sent. Save the same decision again to retry without sending duplicates.": "บันทึกผลการพิจารณาแล้ว แต่ส่งอีเมลแจ้งสถานะไม่สำเร็จ กดบันทึกผลเดิมอีกครั้งเพื่อลองส่งใหม่โดยไม่ส่งซ้ำ",
+  "This status update is too old to resend safely. Please contact the client directly.": "สถานะนี้เก่าเกินกว่าจะส่งซ้ำได้อย่างปลอดภัย กรุณาติดต่อลูกค้าโดยตรง",
+  "The salon receives your request details by email through Resend. When the salon updates your request status, you receive an email in the language you used to submit it. Your selected language is stored with your request.": "ร้านจะได้รับรายละเอียดคำขอของคุณทางอีเมลผ่าน Resend เมื่อร้านอัปเดตสถานะคำขอ คุณจะได้รับอีเมลเป็นภาษาที่คุณใช้ส่งคำขอ โดยระบบจะบันทึกภาษาที่เลือกไว้พร้อมคำขอ",
+  "Reference: {reference}. Your preferred time is awaiting confirmation by the salon. Status updates will be emailed in the language you used for this request.": "เลขอ้างอิง: {reference} วันและเวลาที่คุณต้องการยังรอการยืนยันจากร้าน ระบบจะส่งอีเมลแจ้งสถานะเป็นภาษาที่คุณใช้ส่งคำขอนี้"
 }

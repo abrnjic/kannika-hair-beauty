@@ -34,6 +34,8 @@ export async function handleBooking(request,{fetchImpl=fetch,env=process.env,now
  if(typeof input==='string'){try{input=JSON.parse(input)}catch{return reply(400,{error:'invalid_request'})}}
  if(!input||typeof input!=='object'||JSON.stringify(input).length>8000)return reply(400,{error:'invalid_request'});
  const {id,booking}=input;
+ const language=input.language??'en';
+ if(!['en','th'].includes(language))return reply(400,{error:'invalid_language'});
  if(typeof id!=='string'||!/^([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i.test(id))return reply(400,{error:'invalid_reference'});
  let data;
  try{data=validateBooking(booking,now())}catch(error){return reply(400,{error:'invalid_booking',message:error.message})}
@@ -42,7 +44,7 @@ export async function handleBooking(request,{fetchImpl=fetch,env=process.env,now
  const jsonFetch=(url,options)=>fetchImpl(url,{...options,signal:AbortSignal.timeout(8000)});
  let stored;
  try {
-  const fields=Object.fromEntries(Object.entries({...data,customerId:uid,timezone:'Asia/Bangkok',status:'pending'}).map(([key,value])=>[key,{stringValue:value}]));fields.consent={booleanValue:true};
+  const fields=Object.fromEntries(Object.entries({...data,language,customerId:uid,timezone:'Asia/Bangkok',status:'pending'}).map(([key,value])=>[key,{stringValue:value}]));fields.consent={booleanValue:true};
   let read=await jsonFetch(`${endpoint}/bookings/${id}`,{headers});
   if(read.status===404) {
    const create=await jsonFetch(`${endpoint}:commit`,{method:'POST',headers,body:JSON.stringify({writes:[{update:{name:documentName,fields},updateTransforms:[{fieldPath:'createdAt',setToServerValue:'REQUEST_TIME'}],currentDocument:{exists:false}}]})});
@@ -52,7 +54,7 @@ export async function handleBooking(request,{fetchImpl=fetch,env=process.env,now
   }
   if(!read.ok)return reply([401,403].includes(read.status)?401:503,{error:'booking_verification_failed'});
   stored=decode(await read.json());
-  if(stored.customerId!==uid||keys.some(key=>stored[key]!==data[key]))return reply(409,{error:'reference_conflict'});
+  if(stored.customerId!==uid||(stored.language??'en')!==language||keys.some(key=>stored[key]!==data[key]))return reply(409,{error:'reference_conflict'});
  }catch{return reply(503,{error:'booking_storage_unavailable'})}
  const age=now().getTime()-Date.parse(stored.createdAt);
  // Resend remembers keys for 24h. Stop before expiry so old replays cannot
