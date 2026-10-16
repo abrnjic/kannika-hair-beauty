@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {validateDecision,decisionIsCurrent} from '../dist/admin-policy.js';
+const now=new Date('2026-10-16T03:00:00Z');
+const valid={status:'confirmed',confirmedDate:'2026-10-16',confirmedTime:'11:30'};
+test('confirmation preserves a valid exact appointment',()=>assert.deepEqual(validateDecision(valid,now),valid));
+test('rejects past appointment, invalid date, invalid time and missing exact time',()=>{for(const change of [{confirmedTime:'09:30'},{confirmedTime:''},{confirmedTime:'25:00'},{confirmedDate:'2027-02-30'}])assert.throws(()=>validateDecision({...valid,...change},now));});
+test('declining and reopening clear confirmed visit',()=>{for(const status of ['declined','pending'])assert.deepEqual(validateDecision({...valid,status},now),{status,confirmedDate:'',confirmedTime:''});});
+test('rejects unknown status',()=>assert.throws(()=>validateDecision({...valid,status:'accepted'},now)));
+test('detects concurrent decisions even if status is unchanged',()=>{const snapshot={status:'pending',updatedAt:{toMillis:()=>10}};assert.equal(decisionIsCurrent(snapshot,{status:'pending',updatedAt:{toMillis:()=>10}}),true);assert.equal(decisionIsCurrent(snapshot,{status:'confirmed'}),false);assert.equal(decisionIsCurrent(snapshot,{status:'pending',updatedAt:{toMillis:()=>9}}),false);});

@@ -1,6 +1,19 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.firebase.sign_in_provider == 'google.com'
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'owner';
+    }
+    match /admins/{adminId} {
+      allow get: if request.auth != null && request.auth.uid == adminId
+        && request.auth.token.email_verified == true
+        && request.auth.token.firebase.sign_in_provider == 'google.com';
+      allow list, create, update, delete: if false;
+    }
     match /bookings/{bookingId} {
       function authenticated() { return request.auth != null; }
       function validBooking() {
@@ -18,8 +31,19 @@ service cloud.firestore {
           && d.consent == true && d.createdAt == request.time;
       }
       allow create: if authenticated() && validBooking();
-      allow get: if authenticated() && (resource == null || resource.data.customerId == request.auth.uid);
-      allow list, update, delete: if false;
+      allow get: if isAdmin() || (authenticated() && (resource == null || resource.data.customerId == request.auth.uid));
+      allow list: if isAdmin();
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'confirmedDate', 'confirmedTime', 'updatedAt', 'updatedBy'])
+        && request.resource.data.keys().hasAll(['status', 'confirmedDate', 'confirmedTime', 'updatedAt', 'updatedBy'])
+        && request.resource.data.status in ['pending', 'confirmed', 'declined']
+        && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.updatedAt == request.time
+        && ((request.resource.data.status == 'confirmed'
+          && request.resource.data.confirmedDate is string && request.resource.data.confirmedDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && request.resource.data.confirmedTime is string && request.resource.data.confirmedTime.matches('^([01][0-9]|2[0-3]):[0-5][0-9]$'))
+          || (request.resource.data.status != 'confirmed' && request.resource.data.confirmedDate == '' && request.resource.data.confirmedTime == ''));
+      allow delete: if false;
     }
     match /{document=**} { allow read, write: if false; }
   }

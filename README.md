@@ -48,3 +48,17 @@ The site includes hair services for women and men, colour and styling, nails, ey
 Fonts load from Google Fonts and illustrative photographs from Unsplash. Production hosting is on Vercel at https://kannika-hair-beauty.vercel.app/.
 
 Static hosting should serve the `dist` directory. This GitHub snapshot does not include Sites credentials or deployment-specific project identity.
+
+## Salon administration
+
+The protected admin workspace is available at `/admin` on Vercel (`/admin.html` during local preview). It uses Google sign-in with session-only persistence. Firestore enforces the administrator role independently of the UI.
+
+Administrators can review requests, search loaded pages, confirm a specific date/time in Pattaya, decline requests and reopen them for review. Confirmations are transactional and reject stale edits. Requests load in pages of 100, newest first; summary counts and search apply to loaded records. Customer contact and request fields cannot be changed, and records cannot be deleted through the app.
+
+Only Google-authenticated, verified users with an `admins/{firebaseUid}` document containing `role: "owner"` can read all requests or save decisions. These role documents must be created by a project owner in the Firebase console; client-side role creation is denied. An unapproved signed-in account can see only its own Firebase UID to request access.
+
+The Google provider must be enabled in Authentication and the production domain must be in its authorised domains. Deploy `firestore.rules` whenever permissions change. Do not add staff role records without owner authorisation.
+
+Decisions do not send email or check for staff/calendar conflicts. Staff must contact clients separately and check availability before confirming.
+
+Run policy and validation checks with `node --test tests/*.test.mjs`.
