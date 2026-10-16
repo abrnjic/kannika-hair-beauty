@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {t,bookingCopy} from '../dist/i18n.js';
+import {treatments} from '../dist/booking-validation.js';
+import thai from '../dist/translations-th.js';
+test('every bookable service and time has a Thai display label',()=>{for(const value of [...treatments,'Morning','Afternoon','Evening'])assert.match(thai[value],/[ก-๙]/)});
+test('Thai request copy preserves user input, ISO date and reference',()=>{const copy=bookingCopy({service:"Women's haircut",date:'2026-11-01',time:'Morning',name:'สมหญิง Test',email:'test@example.com',notes:'โปรดคงข้อความ <test>'},'ref-123','th');for(const value of ['ตัดผมผู้หญิง','ช่วงเช้า','2026-11-01','สมหญิง Test','test@example.com','โปรดคงข้อความ <test>','ref-123'])assert.ok(copy.includes(value));});
+test('translation interpolates values without translating customer content',()=>{assert.equal(t('Review request from {name}',{name:'Client <name>'},'th'),'ตรวจสอบคำขอจาก Client <name>');assert.equal(t('Unknown custom service',{},'th'),'Unknown custom service')});
+test('Thai locale validates canonical booking values and localises failures',()=>{execFileSync(process.execPath,['--input-type=module','-e',`globalThis.document={documentElement:{lang:'th'}};const {validateBooking,treatments}=await import('./dist/booking-validation.js');const assert=await import('node:assert/strict');assert.equal(treatments[0],"Women's haircut");const input={service:"Women's haircut",date:'2026-11-01',time:'Morning',name:'ทดสอบ',email:'test@example.com',notes:''};assert.equal(validateBooking(input,new Date('2026-10-16')).service,input.service);assert.throws(()=>validateBooking({...input,email:'bad'},new Date('2026-10-16')),/กรุณา/);`],{cwd:new URL('..',import.meta.url)});});
+test('Thai HTML keeps submitted option values and uses root asset paths',()=>{const page=readFileSync(new URL('../dist/th/index.html',import.meta.url),'utf8');assert.ok(page.includes('lang="th"'));assert.ok(page.includes('value="Women&#x27;s haircut">ตัดผมผู้หญิง'));assert.ok(page.includes('value="Morning">ช่วงเช้า'));assert.ok(page.includes('src="/app.js"'));assert.ok(page.includes('href="/th/admin"'));});
