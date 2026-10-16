@@ -282,5 +282,11 @@ export default {
   "20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ Bang Lamung District, Chon Buri 20150": "20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ อำเภอบางละมุง จังหวัดชลบุรี 20150",
   "Language": "ภาษา",
   "This is a draft. No appointment has been sent or confirmed.": "นี่เป็นเพียงแบบร่าง ยังไม่มีการส่งหรือยืนยันการนัดหมาย",
-  "Filter appointment requests": "กรองคำขอนัดหมาย"
+  "Filter appointment requests": "กรองคำขอนัดหมาย",
+  "Send an appointment request to Kannika. Your preferred date and time are subject to confirmation by the salon. We will email the salon after saving your request.": "ส่งคำขอนัดหมายถึง Kannika วันและเวลาที่เลือกต้องได้รับการยืนยันจากทางร้าน เมื่อบันทึกคำขอแล้ว ระบบจะแจ้งทางร้านทางอีเมล",
+  "Notify salon again ↗": "ส่งอีเมลแจ้งร้านอีกครั้ง ↗",
+  "An email notification has been sent to the salon. Your appointment still requires confirmation.": "ส่งอีเมลแจ้งทางร้านแล้ว การนัดหมายของคุณยังต้องได้รับการยืนยัน",
+  "Your request is saved, but we could not send the salon an email notification. Try again below or call +66 81 727 4874.": "บันทึกคำขอของคุณแล้ว แต่ยังส่งอีเมลแจ้งทางร้านไม่สำเร็จ กรุณาลองอีกครั้งด้านล่าง หรือโทร +66 81 727 4874",
+  "The salon also receives your request details by email through Resend. We do not send appointment confirmation emails to clients automatically.": "ทางร้านจะได้รับรายละเอียดคำขอของคุณทางอีเมลผ่าน Resend ด้วย ระบบยังไม่ส่งอีเมลยืนยันนัดหมายให้ลูกค้าโดยอัตโนมัติ",
+  "New online appointment requests notify the salon by email. Saving an admin decision changes the status in Firebase; contact the client separately to confirm their appointment.": "คำขอนัดหมายออนไลน์ใหม่จะแจ้งทางร้านทางอีเมล การบันทึกในระบบผู้ดูแลจะเปลี่ยนสถานะใน Firebase กรุณาติดต่อลูกค้าโดยตรงเพื่อยืนยันการนัดหมาย"
 };

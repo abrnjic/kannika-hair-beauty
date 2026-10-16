@@ -1,0 +1,28 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {handleBooking,notificationEmail,recipient} from '../server/booking-notifications.mjs';
+const now=new Date('2026-10-16T03:00:00Z');
+const id='11111111-1111-4111-8111-111111111111';
+const booking={service:"Women's haircut",date:'2026-11-02',time:'Morning',name:'ทดสอบ <img src=x onerror=alert(1)>',email:'test@example.com',notes:'ทดสอบระบบ\nNo client contact needed.'};
+const jwt=payload=>'header.'+Buffer.from(JSON.stringify({aud:'kannika-4f9b6',iss:'https://securetoken.google.com/kannika-4f9b6',sub:'customer-1',exp:now.getTime()/1000+3600,...payload})).toString('base64url')+'.signature';
+const request=(extra={})=>({method:'POST',headers:{origin:'https://kannika-hair-beauty.vercel.app',authorization:'Bearer '+jwt()},body:{id,booking},...extra});
+const document=(extra={})=>({fields:Object.fromEntries(Object.entries({...booking,customerId:'customer-1',createdAt:now.toISOString(),...extra}).map(([key,value])=>[key,key==='createdAt'?{timestampValue:value}:{stringValue:value}]))});
+function harness({existing=false,stored=document(),mailStatus=200,readStatus,commitStatus=200}={}){
+ const calls=[];let created=existing;
+ const fetchImpl=async(url,options)=>{
+  calls.push({url,...options});
+  if(url==='https://api.resend.com/emails')return new Response(JSON.stringify(mailStatus===200?{id:'email-1'}:{message:'provider rejected'}),{status:mailStatus});
+  if(url.endsWith(':commit')){created=true;return new Response('{}',{status:commitStatus})}
+  return new Response(JSON.stringify(created?stored:{}),{status:readStatus??(created?200:404)});
+ };
+ return {calls,options:{fetchImpl,now:()=>now,env:{RESEND_API_KEY:'test-server-key'}}};
+}
+test('stores request with server timestamp then sends bilingual notification to fixed salon recipient',async()=>{const h=harness();const result=await handleBooking(request(),h.options);assert.equal(result.status,200);assert.equal(result.body.notification,'sent');const commit=JSON.parse(h.calls.find(call=>call.url.endsWith(':commit')).body);assert.equal(commit.writes[0].update.fields.customerId.stringValue,'customer-1');assert.deepEqual(commit.writes[0].updateTransforms,[{fieldPath:'createdAt',setToServerValue:'REQUEST_TIME'}]);const sent=h.calls.find(call=>call.url==='https://api.resend.com/emails');const email=JSON.parse(sent.body);assert.deepEqual(email.to,[recipient]);assert.equal(email.reply_to,booking.email);assert.match(email.text,/ตัดผมผู้หญิง/);assert.match(email.text,/Women's haircut/);assert.ok(!email.html.includes('<img src=x'));assert.ok(email.html.includes('&lt;img'));assert.equal(sent.headers['Idempotency-Key'],'kannika-booking/'+id);});
+test('retry reads existing booking instead of creating another, using same email idempotency key',async()=>{const h=harness({existing:true});await handleBooking(request(),h.options);assert.ok(!h.calls.some(call=>call.url.endsWith(':commit')));assert.equal(h.calls.at(-1).headers['Idempotency-Key'],'kannika-booking/'+id)});
+test('another customer cannot use an existing request reference',async()=>{const h=harness({existing:true,stored:document({customerId:'someone-else'})});const result=await handleBooking(request(),h.options);assert.equal(result.status,409);assert.ok(!h.calls.some(call=>call.url.includes('resend.com')))});
+test('Firestore rejects a forged token before any notification can be sent',async()=>{const h=harness({readStatus:401});assert.equal((await handleBooking(request(),h.options)).status,401);assert.equal(h.calls.length,1)});
+test('denies missing auth, wrong project, expired token, foreign origin and invalid booking',async()=>{for(const change of [{headers:{}},{headers:{authorization:'Bearer '+jwt({aud:'other-project'})}},{headers:{authorization:'Bearer '+jwt({exp:1})}},{headers:{origin:'https://attacker.example',authorization:'Bearer '+jwt()}},{body:{id,booking:{...booking,email:'bad'}}},{body:{id:'../other',booking}}]){const h=harness();assert.ok((await handleBooking(request(change),h.options)).status>=400);assert.equal(h.calls.length,0)}});
+test('mail failure keeps saved request and returns an explicit notification retry state',async()=>{const h=harness({mailStatus:503});const result=await handleBooking(request(),h.options);assert.equal(result.status,202);assert.equal(result.body.saved,true);assert.equal(result.body.notification,'pending');assert.equal(h.calls.filter(call=>call.url.includes('resend.com')).length,3)});
+test('permanent provider rejection is not repeatedly retried',async()=>{const h=harness({mailStatus:403});assert.equal((await handleBooking(request(),h.options)).body.notification,'pending');assert.equal(h.calls.filter(call=>call.url.includes('resend.com')).length,1)});
+test('old replay cannot send after provider idempotency retention expires',async()=>{const h=harness({existing:true,stored:document({createdAt:'2026-10-14T00:00:00Z'})});const result=await handleBooking(request(),h.options);assert.equal(result.body.notification,'expired');assert.ok(!h.calls.some(call=>call.url.includes('resend.com')))});
+test('client cannot override recipient or sender',async()=>{const email=notificationEmail({...booking,to:'attacker@example.com'},id,'Kannika <appointments@kannikabeauty.com>');assert.deepEqual(email.to,['kannika54932@gmail.com']);assert.equal(email.from,'Kannika <appointments@kannikabeauty.com>')});

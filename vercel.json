@@ -25,5 +25,10 @@
       "source": "/th",
       "destination": "/th/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/bookings.mjs": {
+      "maxDuration": 60
+    }
+  }
 }

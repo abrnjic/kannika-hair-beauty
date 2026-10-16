@@ -1,10 +1,10 @@
 # Kannika — Hair & Beauty Salon
 
-English working version of the Kannika salon website in Pattaya, Thailand.
+English and Thai website for Kannika Hair & Beauty Salon in Pattaya, Thailand.
 
 ## Run locally
 
-No build step or Node dependencies are required. With Python 3 installed:
+Static pages can be previewed without dependencies. Booking submission requires the Vercel Function and its production secret; a plain static server does not send requests. With Python 3 installed:
 
 ```sh
 python3 -m http.server 4173 --directory dist
@@ -33,17 +33,17 @@ Verified against the live project on 2026-10-16:
 
 To change the rules with Firebase CLI, sign in and run `firebase deploy --only firestore:rules --project kannika-4f9b6`. To temporarily return to draft-only mode, set `bookingsEnabled = false` in `dist/firebase-config.js` and deploy.
 
-The browser loads Firebase Auth and Firestore Lite from Google's CDN only when a live request is submitted. Anonymous authentication uses memory persistence. Customer details are stored in `bookings` with status `pending`; they do not reserve or confirm a calendar slot. The console owner can manage records through Firebase IAM. Authorised salon administrators can manage requests at `/admin`.
+The browser loads Firebase Auth from Google's CDN only when a live request is submitted. It sends the guest's Firebase ID token, canonical request data and a stable UUID to `/api/bookings`. The Vercel Function saves the request through Firestore REST under the same deployed security rules, verifies the stored fields, then sends the salon email through Resend. Anonymous authentication uses memory persistence. Customer details are stored in `bookings` with status `pending`; they do not reserve or confirm a calendar slot. The console owner can manage records through Firebase IAM. Authorised salon administrators can manage requests at `/admin`.
 
-Requests reuse the same ID for retries during the page session to avoid duplicate writes. Failure keeps the form data and does not show a success message.
+Requests reuse the same ID for retries during the page session to avoid duplicate writes. A storage failure keeps the form data. If storage succeeds but email fails, the UI explicitly shows that the request is saved and offers an idempotent notification retry plus the salon phone number.
 
-Email delivery is not configured. The salon contact email is kannika54932@gmail.com. The salon address is 20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ Bang Lamung District, Chon Buri 20150. The salon telephone is +66 81 727 4874. Social profiles, prices, opening hours and data retention policy still need to be supplied.
+New booking notifications are sent to kannika54932@gmail.com through Resend; client confirmation emails are not automatic. The salon contact email is kannika54932@gmail.com. The salon address is 20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ Bang Lamung District, Chon Buri 20150. The salon telephone is +66 81 727 4874. Social profiles, prices, opening hours and data retention policy still need to be supplied.
 
-Run input validation tests with `node --test tests/booking-validation.test.mjs`. For the live integration checks, serve the repository root locally and open `tests/firebase-integration.html`. This creates one clearly labelled synthetic request in Firebase; do not include the test harness in the production `dist` directory.
+Run input validation tests with `node --test tests/booking-validation.test.mjs`. The legacy `tests/firebase-integration.html` harness requires the updated booking API to be served as well (not just a static Python server). This creates one clearly labelled synthetic request in Firebase; do not include the test harness in the production `dist` directory.
 
 ## Content and hosting
 
-The site includes hair services for women and men, colour and styling, nails, eyelash extensions and pedicures for women and men. Journal sharing supports Facebook, WhatsApp, LINE and copying links. Thai language support is planned.
+The site includes hair services for women and men, colour and styling, nails, eyelash extensions and pedicures for women and men. Journal sharing supports Facebook, WhatsApp, LINE and copying links. English and Thai are available via the language switch.
 
 Fonts load from Google Fonts and illustrative photographs from Unsplash. Production hosting is on Vercel at https://kannika-hair-beauty.vercel.app/.
 
@@ -69,6 +69,16 @@ Brand colour: the logo and emblem SVG wrappers use the exact `--gold` value from
 
 Production admin sign-in uses a full-page Google redirect, with same-origin Firebase auth helper rewrites in `vercel.json`. OAuth client authorised redirect URI: `https://kannika-hair-beauty.vercel.app/__/auth/handler`. Keep this URI and Firebase authorised domains aligned if changing domains. Local preview continues to use popup sign-in.
 
-English and Thai: `/` and `/th/`; administration: `/admin` and `/th/admin`. All public copy, booking controls, validation messages, request downloads, sharing and administrator decisions are translated. Thai uses Noto Sans Thai and Gregorian dates in the Pattaya time zone. Submitted treatment/time/status values remain canonical English keys for compatibility with existing Firebase records and rules. Customer names and notes are preserved verbatim. Edit `translations/th.json`, then run `python3 scripts/build-translations.py` to rebuild the Thai pages and browser dictionary. No automatic email delivery is configured.
+English and Thai: `/` and `/th/`; administration: `/admin` and `/th/admin`. All public copy, booking controls, validation messages, request downloads, sharing and administrator decisions are translated. Thai uses Noto Sans Thai and Gregorian dates in the Pattaya time zone. Submitted treatment/time/status values remain canonical English keys for compatibility with existing Firebase records and rules. Customer names and notes are preserved verbatim. Edit `translations/th.json`, then run `python3 scripts/build-translations.py` to rebuild the Thai pages and browser dictionary. New online booking requests notify the salon by email; administrator decisions do not send client emails.
 
 Thai verification (2026-10-16): 15 local tests pass, including canonical booking values in Thai locale and Thai request downloads. A labelled synthetic booking with a Thai name and notes was submitted successfully, displayed in the production Thai admin, confirmed with an exact time, and then declined to close the test. Desktop and 390px mobile Thai layouts were checked.
+
+## Booking email notifications
+
+- Handler: `api/bookings.mjs`; validation, Firestore persistence and bilingual email template: `server/booking-notifications.mjs`.
+- Recipient is fixed server-side to `kannika54932@gmail.com`. Sender defaults to `Kannika <appointments@kannikabeauty.com>`. Replies go to the client's submitted email.
+- `RESEND_API_KEY` is a Vercel Production Secret, restricted to sending from `kannikabeauty.com`. Never commit, print or put this key in browser code. `BOOKING_FROM_EMAIL` is an optional server override.
+- DNS on Cloudflare: TXT `resend._domainkey` (Resend DKIM public key), DNS-only CNAME `rsend` → `rsend-apne1.forge.rmta.net`, and DNS-only CNAME `send` → `send.forge.rmta.net`. Incoming email hosting is unchanged.
+- Every operation uses the customer's Firebase ID token; Firestore verifies it and enforces the existing rules. No Firebase administrator private key is required. Client request values cannot change the sender or recipient.
+- Stable request UUIDs prevent duplicate bookings. Resend uses `kannika-booking/{uuid}` as its idempotency key; replays stop after 23 hours to stay within Resend's 24-hour retention. Provider errors return a saved-but-not-notified state, rather than pretending the email was sent. No periodic retry worker is configured.
+- Run `node --test tests/*.test.mjs` (24 checks including invalid authentication, owner isolation, safe HTML, duplicate suppression and provider failures).
