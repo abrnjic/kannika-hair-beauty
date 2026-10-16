@@ -7,7 +7,7 @@ translations=json.loads(Path('translations/th.json').read_text())
 location=json.loads(Path('salon-location.json').read_text())
 Path('dist/translations-th.js').write_text('export default '+json.dumps(translations,ensure_ascii=False,indent=2)+';\n')
 font='<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link rel="stylesheet" href="/i18n.css">'
-for file,is_admin in [('index.html',False),('admin.html',True)]:
+for file,is_admin in [('index.html',False),('admin.html',True),('club.html',False)]:
  p=Path('dist')/file;s=p.read_text()
  if not is_admin:
   # Both footer links open the owner's verified place pin, never a text search.
@@ -22,7 +22,9 @@ for file,is_admin in [('index.html',False),('admin.html',True)]:
   s=s.replace('<span class="workspace-label">SALON WORKSPACE</span>','<nav class="language-switch" aria-label="Language"><a href="/admin" lang="en" aria-current="page">EN</a><a href="/th/admin" lang="th">ไทย</a></nav><span class="workspace-label">SALON WORKSPACE</span>')
  if '/i18n.css' not in s:s=s.replace('</head>',font+'</head>')
  # Metadata links are relative to the current origin, including local preview.
- if 'hreflang=' not in s:s=s.replace('</head>',f'<link rel="alternate" hreflang="en" href="{"/admin" if is_admin else "/"}"><link rel="alternate" hreflang="th" href="{"/th/admin" if is_admin else "/th/"}"></head>')
+ route='/admin' if is_admin else '/club' if file=='club.html' else '/'
+ if file=='club.html':s=re.sub(r'<link rel="alternate"[^>]+>', '', s)
+ if 'hreflang=' not in s:s=s.replace('</head>',f'<link rel="alternate" hreflang="en" href="{route}"><link rel="alternate" hreflang="th" href="{"/th/" if route=="/" else "/th"+route}"></head>')
  p.write_text(s)
  class ThaiPage(HTMLParser):
   def __init__(self):super().__init__(convert_charrefs=True);self.parts=[]
@@ -33,9 +35,9 @@ for file,is_admin in [('index.html',False),('admin.html',True)]:
     if value is None:result.append(key);continue
     if key=='lang' and tag=='html':value='th'
     elif key in ['alt','aria-label','placeholder','title','label','data-title','content']:value=translations.get(value,value)
-    elif key=='href' and value in ['/','/admin']:
+    elif key=='href' and value in ['/','/admin','/club']:
      # Keep language switch and alternate links pointing to the chosen language.
-     if not any(k in ['lang','hreflang'] for k,v in attrs):value='/th/' if value=='/' else '/th/admin'
+     if not any(k in ['lang','hreflang'] for k,v in attrs):value='/th/' if value=='/' else '/th/club' if value=='/club' else '/th/admin'
     if key=='aria-current':continue
     result.append(key+'="'+escape(value,quote=True)+'"')
    if tag=='a' and ('lang','th') in attrs:result.append('aria-current="page"')

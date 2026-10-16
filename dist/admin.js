@@ -4,6 +4,7 @@ import {initializeAuth, browserSessionPersistence, browserPopupRedirectResolver,
 import {getFirestore, doc, getDocFromServer, getDocsFromServer, collection, query, orderBy, limit, startAfter} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
 import {firebaseConfig, salonEmail} from './firebase-config.js';
 import {validateDecision} from './admin-policy.js';
+import {setupLoyaltyAdmin} from './loyalty-admin.js';
 import {bangkokToday} from './booking-validation.js';
 // Use same-origin auth helpers on production so redirect sign-in survives storage partitioning.
 const sameTabSignIn = location.hostname === 'kannika-hair-beauty.vercel.app';
@@ -13,6 +14,8 @@ const db = getFirestore(app);
 const $ = selector => document.querySelector(selector);
 let records = [], cursor = null, activeFilter = 'pending', session = 0, loading = false, saving = false, selected = null, administrator = null;
 const requestDialog = $('#request-dialog');
+const loyaltyAdmin=setupLoyaltyAdmin(db,()=>administrator);
+$('#booking-loyalty').addEventListener('click',()=>{if(selected&&!saving)loyaltyAdmin.open(selected)});
 const statusLabel = status => ({pending:t('Awaiting review'), confirmed:t('Confirmed'), declined:t('Declined')}[status] || t('Unknown'));
 const dateLabel = value => {if(!value)return t('Not set');const date=new Date(value+'T12:00:00+07:00');return Number.isFinite(date.getTime())?new Intl.DateTimeFormat(locale,{day:'numeric',month:'short',year:'numeric',timeZone:'Asia/Bangkok'}).format(date):value};
 const timestampLabel = timestamp => timestamp?.toDate ? new Intl.DateTimeFormat(locale,{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Bangkok'}).format(timestamp.toDate())+' · '+t('Pattaya') : '—';
@@ -22,7 +25,7 @@ function toast(message){$('#toast').textContent=message;$('#toast').hidden=false
 $('#toast').hidden=true;
 $('#today-label').textContent=new Intl.DateTimeFormat(locale,{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Bangkok'}).format(new Date())+' · '+t('Pattaya');
 function node(tag,text,className){const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(className)el.className=className;return el}
-function clearData(){records=[];cursor=null;selected=null;administrator=null;$('#booking-rows').replaceChildren();$('#workspace').hidden=true;$('#access-pending').hidden=true;$('#pending-email').textContent='';$('#pending-uid').value='';$('#admin-email').textContent='';$('#search').value='';if(requestDialog.open)requestDialog.close();for(const key of ['all','pending','confirmed','declined'])$('#count-'+key).textContent='0'}
+function clearData(){loyaltyAdmin.reset();records=[];cursor=null;selected=null;administrator=null;$('#booking-rows').replaceChildren();$('#workspace').hidden=true;$('#access-pending').hidden=true;$('#pending-email').textContent='';$('#pending-uid').value='';$('#admin-email').textContent='';$('#search').value='';if(requestDialog.open)requestDialog.close();for(const key of ['all','pending','confirmed','declined'])$('#count-'+key).textContent='0'}
 function render(){
  const search=$('#search').value.trim().toLowerCase();
  const visible=records.filter(record=>(activeFilter==='all'||record.status===activeFilter)&&[record.name,record.email,record.service,t(record.service||''),record.id,record.date,record.confirmedDate].some(value=>String(value??'').toLowerCase().includes(search)));

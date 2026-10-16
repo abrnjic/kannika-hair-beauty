@@ -47,6 +47,72 @@ service cloud.firestore {
           || (request.resource.data.status != 'confirmed' && request.resource.data.confirmedDate == '' && request.resource.data.confirmedTime == ''));
       allow delete: if false;
     }
+    match /loyaltyMembers/{memberId} {
+      function verifiedOwner() {
+        return request.auth != null && request.auth.uid == memberId
+          && request.auth.token.email_verified == true;
+      }
+      function balances(d) {
+        return d.stamps is int && d.stamps >= 0 && d.stamps <= 1000000
+          && d.discountsUsed is int && d.discountsUsed >= 0 && d.discountsUsed <= (d.stamps + 5) / 10
+          && d.giftsUsed is int && d.giftsUsed >= 0 && d.giftsUsed <= d.stamps / 10;
+      }
+      function eventMatches(d) {
+        let e = getAfter(/databases/$(database)/documents/loyaltyMembers/$(memberId)/events/$(d.lastEventId)).data;
+        return e.stamps == d.stamps && e.discountsUsed == d.discountsUsed && e.giftsUsed == d.giftsUsed
+          && e.createdAt == request.time && e.createdBy == request.auth.uid;
+      }
+      allow get: if isAdmin() || verifiedOwner();
+      allow list: if isAdmin();
+      allow create: if verifiedOwner()
+        && request.resource.data.keys().hasOnly(['name','email','language','consent','marketingConsent','termsVersion','stamps','discountsUsed','giftsUsed','createdAt'])
+        && request.resource.data.keys().hasAll(['name','email','language','consent','marketingConsent','termsVersion','stamps','discountsUsed','giftsUsed','createdAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 100
+        && request.resource.data.email == request.auth.token.email.lower()
+        && request.resource.data.language in ['en','th']
+        && request.resource.data.consent == true && request.resource.data.marketingConsent is bool
+        && request.resource.data.termsVersion == '1'
+        && request.resource.data.stamps == 0 && request.resource.data.discountsUsed == 0 && request.resource.data.giftsUsed == 0
+        && request.resource.data.createdAt == request.time;
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stamps','discountsUsed','giftsUsed','lastEventId','updatedAt','updatedBy'])
+        && balances(request.resource.data)
+        && request.resource.data.updatedAt == request.time && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.lastEventId is string
+        && !exists(/databases/$(database)/documents/loyaltyMembers/$(memberId)/events/$(request.resource.data.lastEventId))
+        && eventMatches(request.resource.data);
+      allow delete: if false;
+      match /events/{eventId} {
+        function memberBefore() { return get(/databases/$(database)/documents/loyaltyMembers/$(memberId)).data; }
+        function validEvent() {
+          let e = request.resource.data;
+          let m = memberBefore();
+          let after = getAfter(/databases/$(database)/documents/loyaltyMembers/$(memberId)).data;
+          return e.keys().hasOnly(['type','date','reference','note','bookingId','completedPaid','stamps','discountsUsed','giftsUsed','language','createdAt','createdBy'])
+            && e.keys().hasAll(['type','date','reference','note','bookingId','completedPaid','stamps','discountsUsed','giftsUsed','language','createdAt','createdBy'])
+            && e.type in ['visit','discount','gift'] && e.createdBy == request.auth.uid && e.createdAt == request.time
+            && e.date is string && e.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+            && e.reference is string && e.reference.size() > 0 && e.reference.size() <= 100
+            && e.note is string && e.note.size() <= 300 && e.bookingId is string
+            && e.language == m.language && balances(e)
+            && after.lastEventId == eventId && after.updatedAt == request.time && after.updatedBy == request.auth.uid
+            && after.stamps == e.stamps && after.discountsUsed == e.discountsUsed && after.giftsUsed == e.giftsUsed
+            && ((e.type == 'visit' && e.completedPaid == true
+              && e.stamps == m.stamps + 1 && e.discountsUsed == m.discountsUsed && e.giftsUsed == m.giftsUsed
+              && ((e.bookingId == '' && eventId.matches('^manual_[a-f0-9]{64}$'))
+                || (e.bookingId != '' && eventId == 'booking_' + e.bookingId
+                  && get(/databases/$(database)/documents/bookings/$(e.bookingId)).data.status == 'confirmed'
+                  && get(/databases/$(database)/documents/bookings/$(e.bookingId)).data.email.lower() == m.email)))
+            || (e.type == 'discount' && e.completedPaid == false && eventId.matches('^redeem_[a-f0-9-]{36}$')
+              && e.stamps == m.stamps && e.discountsUsed == m.discountsUsed + 1 && e.giftsUsed == m.giftsUsed)
+            || (e.type == 'gift' && e.completedPaid == false && e.note.size() > 0 && eventId.matches('^redeem_[a-f0-9-]{36}$')
+              && e.stamps == m.stamps && e.giftsUsed == m.giftsUsed + 1 && e.discountsUsed == m.discountsUsed));
+        }
+        allow get, list: if isAdmin() || verifiedOwner();
+        allow create: if isAdmin() && validEvent();
+        allow update, delete: if false;
+      }
+    }
     match /{document=**} { allow read, write: if false; }
   }
 }

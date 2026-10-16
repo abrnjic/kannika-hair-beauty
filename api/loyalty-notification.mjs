@@ -1,0 +1,2 @@
+import {handleLoyaltyNotification} from '../server/loyalty-notifications.mjs';
+export default async function handler(req,res){res.setHeader('Cache-Control','no-store');res.setHeader('Allow','POST');try{const result=await handleLoyaltyNotification({method:req.method,headers:req.headers,body:req.body});return res.status(result.status).json(result.body)}catch{return res.status(503).json({error:'loyalty_service_unavailable'})}}

@@ -24,6 +24,14 @@
     {
       "source": "/th",
       "destination": "/th/index.html"
+    },
+    {
+      "source": "/club",
+      "destination": "/club.html"
+    },
+    {
+      "source": "/th/club",
+      "destination": "/th/club.html"
     }
   ],
   "functions": {
@@ -31,6 +39,9 @@
       "maxDuration": 60
     },
     "api/booking-status.mjs": {
+      "maxDuration": 60
+    },
+    "api/loyalty-notification.mjs": {
       "maxDuration": 60
     }
   }
