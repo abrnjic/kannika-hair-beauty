@@ -4,10 +4,15 @@ from html import escape,unescape
 from pathlib import Path
 import json,re
 translations=json.loads(Path('translations/th.json').read_text())
+location=json.loads(Path('salon-location.json').read_text())
 Path('dist/translations-th.js').write_text('export default '+json.dumps(translations,ensure_ascii=False,indent=2)+';\n')
 font='<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link rel="stylesheet" href="/i18n.css">'
 for file,is_admin in [('index.html',False),('admin.html',True)]:
  p=Path('dist')/file;s=p.read_text()
+ if not is_admin:
+  # Both footer links open the owner's verified place pin, never a text search.
+  s=re.sub(r'(<a class="salon-address" href=")[^"]+(")',lambda m:m[1]+escape(location['googlePlaceUrl'],quote=True)+m[2],s)
+  s=re.sub(r'(<a class="text-link" href=")[^"]+("[^>]*>Find us on Google Maps ↗</a>)',lambda m:m[1]+escape(location['googlePlaceUrl'],quote=True)+m[2],s)
  # Option text may be translated, but submitted values must match deployed rules.
  s=re.sub(r'<option>([^<]+)</option>',lambda m:'<option value="'+escape(unescape(m[1]),quote=True)+'">'+m[1]+'</option>',s)
  s=re.sub(r'((?:href|src)=")(assets/[^\"]+|style.css|app.js)(")',r'\1/\2\3',s)

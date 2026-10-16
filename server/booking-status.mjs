@@ -1,13 +1,15 @@
 import {validateDecision} from '../dist/admin-policy.js';
 import {t} from '../dist/i18n.js';
 import {recipient} from './booking-notifications.mjs';
+import salonLocation from '../salon-location.json' with {type:'json'};
 const project='kannika-4f9b6';
 const root=`https://firestore.googleapis.com/v1/projects/${project}/databases/(default)/documents`;
 const escape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const decode=document=>Object.fromEntries(Object.entries(document.fields??{}).map(([key,value])=>[key,value.stringValue??value.timestampValue??value.booleanValue]));
 const reply=(status,body)=>({status,body});
-const salonAddress='20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ Bang Lamung District, Chon Buri 20150';
-const destination=encodeURIComponent(salonAddress+', Thailand');
+const salonAddress=salonLocation.address;
+// Use the owner's verified place pin, not a geocoder's interpretation of the address.
+const destination=encodeURIComponent(`${salonLocation.latitude},${salonLocation.longitude}`);
 export const directions={address:salonAddress,google:`https://www.google.com/maps/dir/?api=1&destination=${destination}`,apple:`https://maps.apple.com/directions?destination=${destination}`};
 const copy={
  en:{pending:'Your appointment request is awaiting review',confirmed:'Your appointment is confirmed',declined:'We are unable to accept your appointment request',
@@ -71,7 +73,7 @@ export async function handleStatus(request,{fetchImpl=fetch,env=process.env,now=
  if(typeof stored.email!=='string'||!/^[^ @]+@[^ @]+[.][^ @]+$/.test(stored.email))return reply(202,{...result,notification:'pending'});
  const email=statusEmail(stored,id,env.BOOKING_FROM_EMAIL||'Kannika <appointments@kannikabeauty.com>');
  for(let attempt=0;attempt<3;attempt++){
-  try{const sent=await jsonFetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${env.RESEND_API_KEY}`,'Content-Type':'application/json','Idempotency-Key':`kannika-status-v2/${id}/${stored.updatedAt}`},body:JSON.stringify(email)});if(sent.ok&&(await sent.json()).id)return reply(200,{...result,notification:'sent'});if(!sent.ok&&sent.status!==429&&sent.status<500)break}catch{}
+  try{const sent=await jsonFetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${env.RESEND_API_KEY}`,'Content-Type':'application/json','Idempotency-Key':`kannika-status-v3/${id}/${stored.updatedAt}`},body:JSON.stringify(email)});if(sent.ok&&(await sent.json()).id)return reply(200,{...result,notification:'sent'});if(!sent.ok&&sent.status!==429&&sent.status<500)break}catch{}
  }
  console.error('client_status_notification_pending',{bookingId:id});
  return reply(202,{...result,notification:'pending'});
