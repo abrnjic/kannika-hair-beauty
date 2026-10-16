@@ -8,7 +8,7 @@ service cloud.firestore {
         return d.keys().hasAll(['service', 'date', 'time', 'name', 'email', 'notes', 'customerId', 'timezone', 'status', 'consent', 'createdAt'])
           && d.keys().hasOnly(['service', 'date', 'time', 'name', 'email', 'notes', 'customerId', 'timezone', 'status', 'consent', 'createdAt'])
           && d.customerId == request.auth.uid
-          && d.service in ["Women's haircut", "Men's haircut", 'Wash & blow-dry', 'Hair styling & updos', 'Hair colour', 'Highlights', 'Hair care treatment', 'Manicure & nail shaping', 'Nail extensions', 'Nail polish & nail art', 'Eyelash extensions', 'Pedicure — women', 'Pedicure — men', 'Help me choose']
+          && d['service'] in ["Women's haircut", "Men's haircut", 'Wash & blow-dry', 'Hair styling & updos', 'Hair colour', 'Highlights', 'Hair care treatment', 'Manicure & nail shaping', 'Nail extensions', 'Nail polish & nail art', 'Eyelash extensions', 'Pedicure — women', 'Pedicure — men', 'Help me choose']
           && d.date is string && d.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
           && d.time in ['Morning', 'Afternoon', 'Evening']
           && d.name is string && d.name.size() > 0 && d.name.size() <= 100

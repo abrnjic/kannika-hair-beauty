@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Kannika Firebase integration check</title><style>body{font:16px system-ui;background:#151715;color:#eeeade;padding:40px}button{padding:15px}li{margin:12px 0}</style><h1>Kannika Firebase integration check</h1><p>Creates one clearly labelled synthetic test request. No emails are sent.</p><button id="run">Run integration checks</button><ol id="results"></ol><script type="module">
+import {sendBooking} from '../dist/firebase-booking.js';
+import {firebaseConfig} from '../dist/firebase-config.js';
+import {initializeApp,getApp} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
+import {initializeAuth,inMemoryPersistence,signInAnonymously} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
+import {getFirestore,doc,getDoc,setDoc,getDocs,collection,updateDoc,serverTimestamp} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore-lite.js';
+import {bangkokToday} from '../dist/booking-validation.js';
+const result=document.querySelector('#results');
+function log(message){const li=document.createElement('li');li.textContent=message;result.append(li)}
+async function denied(label,fn){try{await fn();throw Error(label+' was unexpectedly allowed')}catch(error){if(error.code==='permission-denied')log('PASS: '+label+' denied');else throw error}}
+document.querySelector('#run').onclick=async()=>{document.querySelector('#run').disabled=true;try{
+const data={service:'Help me choose',date:bangkokToday(new Date(Date.now()+86400000)),time:'Morning',name:'TEST — Firebase integration check',email:'test@example.com',notes:'Synthetic integration test. Not a client appointment. No action required.'};
+const first=await sendBooking(data);log('PASS: saved request '+first.id);const again=await sendBooking(data);if(again.id!==first.id)throw Error('Duplicate request reference');log('PASS: retry reuses original request');
+const db=getFirestore(getApp());const saved=await getDoc(doc(db,'bookings',first.id));if(saved.data().status!=='pending')throw Error('Wrong status');log('PASS: own request readable and pending');
+const app2=initializeApp(firebaseConfig,'security-probe');const auth2=initializeAuth(app2,{persistence:inMemoryPersistence});const db2=getFirestore(app2);await denied('unauthenticated read',()=>getDoc(doc(db2,'bookings',first.id)));await signInAnonymously(auth2);await denied('another guest reading request',()=>getDoc(doc(db2,'bookings',first.id)));await denied('listing all requests',()=>getDocs(collection(db2,'bookings')));await denied('editing submitted request',()=>updateDoc(doc(db,'bookings',first.id),{status:'confirmed'}));
+await denied('invalid request data',()=>setDoc(doc(db2,'bookings',crypto.randomUUID()),{...data,customerId:auth2.currentUser.uid,timezone:'Asia/Bangkok',status:'confirmed',consent:true,createdAt:serverTimestamp()}));
+log('ALL CHECKS PASSED');
+}catch(error){log('FAIL: '+error.code+' '+error.message);document.querySelector('#run').disabled=false}};
+</script></html>

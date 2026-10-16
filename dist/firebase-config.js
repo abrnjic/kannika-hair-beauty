@@ -8,4 +8,4 @@ export const firebaseConfig = {
   appId: '1:277789798683:web:1ab1aa91e61d3c2a4e63be'
 };
 // Enable only after Anonymous Auth and firestore.rules are deployed and verified.
-export const bookingsEnabled = false;
+export const bookingsEnabled = true;
