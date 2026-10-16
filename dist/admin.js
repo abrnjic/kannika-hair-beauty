@@ -86,11 +86,12 @@ $('#decision-form').addEventListener('submit',async event=>{
 $('#sign-in').addEventListener('click',async()=>{
  setError('#auth-error');$('#sign-in').disabled=true;
  const provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});
- try{if(sameTabSignIn){await signInWithRedirect(auth,provider)}else{await signInWithPopup(auth,provider)}}catch(error){setError('#auth-error',({'auth/popup-blocked':'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.','auth/popup-closed-by-user':'Sign-in was closed. Try again when ready.','auth/unauthorized-domain':'This website needs to be added to Firebase Authentication authorised domains.','auth/network-request-failed':'Could not reach Google sign-in. Check your connection and try again.','auth/web-storage-unsupported':'Sign-in needs browser storage. Open this page in a regular browser tab.'}[error.code])||'Could not sign in. Please try again.')}
+ try{await redirectResult;await auth.authStateReady();if(sameTabSignIn){await signInWithRedirect(auth,provider)}else{await signInWithPopup(auth,provider)}}catch(error){setError('#auth-error',({'auth/popup-blocked':'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.','auth/popup-closed-by-user':'Sign-in was closed. Try again when ready.','auth/unauthorized-domain':'This website needs to be added to Firebase Authentication authorised domains.','auth/network-request-failed':'Could not reach Google sign-in. Check your connection and try again.','auth/web-storage-unsupported':'Sign-in needs browser storage. Open this page in a regular browser tab.'}[error.code])||'Could not sign in. Please try again.')}
  finally{$('#sign-in').disabled=false}
 });
 // Recover the result after Google returns to this tab; never log credentials or tokens.
-const redirectResult = getRedirectResult(auth).then(()=>null).catch(error=>error);
+$('#sign-in').disabled=true;
+const redirectResult = getRedirectResult(auth).then(()=>null).catch(error=>error).finally(()=>{$('#sign-in').disabled=false});
 for(const id of ['#sign-out','#login-sign-out'])$(id).addEventListener('click',async()=>{if(saving){toast('Please wait for the current decision to finish saving.');return}try{await signOut(auth)}catch{toast('Could not sign out. Please try again.')}});
 onAuthStateChanged(auth,async user=>{
  const currentSession=++session;clearData();loading=false;$('#login-panel').hidden=false;$('#sign-in').hidden=!!user;$('#login-sign-out').hidden=!user;setError('#auth-error');
