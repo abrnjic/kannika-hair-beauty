@@ -19,6 +19,23 @@ export function notificationEmail(data,id,from) {
   text:['KANNIKA — คำขอนัดหมายใหม่ / New appointment request','',...rows.map(row=>`${row.label}: ${row.value}`),'',`เลขอ้างอิง / Reference: ${id}`,'เวลาในพัทยา / All times: Asia/Bangkok (UTC+7)','คำขอนี้ยังไม่ใช่การยืนยันนัดหมาย / This is an appointment request, not a confirmed appointment.','จัดการคำขอ / Review: https://kannika-hair-beauty.vercel.app/th/admin','English admin: https://kannika-hair-beauty.vercel.app/admin'].join('\n'),
   html:`<!doctype html><html><body style="margin:0;background:#151715;color:#eeeade;font:15px/1.7 Arial,sans-serif"><main style="max-width:620px;padding:32px;margin:auto"><h1 style="color:#cbb17c;font-size:28px">KANNIKA</h1><h2>คำขอนัดหมายใหม่<br>New appointment request</h2><table style="width:100%;border-collapse:collapse">${rows.map(row=>`<tr><th style="text-align:left;vertical-align:top;padding:12px 8px;border-bottom:1px solid #555;font-size:12px">${escape(row.label)}</th><td style="padding:12px 8px;border-bottom:1px solid #555;white-space:pre-wrap;overflow-wrap:anywhere">${escape(row.value)}</td></tr>`).join('')}</table><p>เลขอ้างอิง / Reference: ${escape(id)}<br>เวลาในพัทยา / Asia/Bangkok (UTC+7)</p><p>คำขอนี้ยังไม่ใช่การยืนยันนัดหมาย<br>This request requires salon confirmation.</p><p><a style="color:#cbb17c" href="https://kannika-hair-beauty.vercel.app/th/admin">จัดการคำขอ ↗</a> · <a style="color:#cbb17c" href="https://kannika-hair-beauty.vercel.app/admin">English admin ↗</a></p></main></body></html>`};
 }
+export function receiptEmail(data,id,from) {
+ const lang=data.language==='th'?'th':'en';
+ const c=lang==='th'?{
+  title:'เราได้รับคำขอนัดหมายของคุณแล้ว',
+  message:'ขอบคุณที่เลือก Kannika เราได้รับคำขอของคุณแล้ว และกำลังรอการพิจารณาจากทางร้าน วันและเวลาที่คุณเลือกยังไม่ได้รับการยืนยัน เมื่อร้านอนุมัติแล้ว คุณจะได้รับอีเมลอีกฉบับพร้อมวันและเวลานัดหมายที่ยืนยัน',
+  service:'บริการ',visit:'วันและเวลาที่ต้องการ',reference:'เลขอ้างอิง',zone:'เวลาทั้งหมดเป็นเวลาในพัทยา · Asia/Bangkok (UTC+7)',contact:'หากมีคำถาม กรุณาติดต่อ Kannika'
+ }:{
+  title:'Your appointment request has been received',
+  message:'Thank you for choosing Kannika. We have received your request and it is awaiting review by the salon. Your preferred date and time are not confirmed yet. Once the salon approves your appointment, you will receive another email with the confirmed date and time.',
+  service:'Treatment',visit:'Preferred visit',reference:'Reference',zone:'All times are in Pattaya · Asia/Bangkok (UTC+7)',contact:'Questions? Contact Kannika'
+ };
+ const date=new Intl.DateTimeFormat(lang==='th'?'th-TH-u-ca-gregory':'en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Bangkok'}).format(new Date(data.date+'T12:00:00+07:00'));
+ const rows=[[c.service,t(data.service,{},lang)],[c.visit,`${date} · ${t(data.time,{},lang)}`],[c.reference,id]];
+ return {from,to:[data.email],reply_to:recipient,subject:`Kannika — ${c.title}`,
+  text:['KANNIKA — '+c.title,'',data.name,c.message,'',...rows.map(([label,value])=>`${label}: ${value}`),'',c.zone,c.contact,recipient,'+66 81 727 4874'].join('\n'),
+  html:`<!doctype html><html lang="${lang}"><body style="margin:0;background:#151715;color:#eeeade;font:16px/1.7 Arial,sans-serif"><main style="max-width:620px;padding:32px;margin:auto"><h1 style="color:#cbb17c">KANNIKA</h1><h2>${c.title}</h2><p>${escape(data.name)}</p><p>${c.message}</p><table style="width:100%;border-collapse:collapse">${rows.map(([label,value])=>`<tr><th style="text-align:left;vertical-align:top;padding:12px 8px;border-bottom:1px solid #555">${label}</th><td style="padding:12px 8px;border-bottom:1px solid #555;overflow-wrap:anywhere">${escape(value)}</td></tr>`).join('')}</table><p>${c.zone}</p><p>${c.contact}<br><a style="color:#cbb17c" href="mailto:${recipient}">${recipient}</a><br><a style="color:#cbb17c" href="tel:+66817274874">+66 81 727 4874</a></p></main></body></html>`};
+}
 export async function handleBooking(request,{fetchImpl=fetch,env=process.env,now=()=>new Date()}={}) {
  if(request.method!=='POST')return reply(405,{error:'method_not_allowed'});
  if(!env.RESEND_API_KEY)return reply(503,{error:'notifications_unavailable'});
@@ -59,15 +76,25 @@ export async function handleBooking(request,{fetchImpl=fetch,env=process.env,now
  const age=now().getTime()-Date.parse(stored.createdAt);
  // Resend remembers keys for 24h. Stop before expiry so old replays cannot
  // send a second notification after the provider's deduplication window.
- if(!Number.isFinite(age)||age< -60000||age>23*60*60*1000)return reply(200,{id,saved:true,notification:'expired'});
- const email=notificationEmail(stored,id,env.BOOKING_FROM_EMAIL||'Kannika <appointments@kannikabeauty.com>');
- for(let attempt=0;attempt<3;attempt++) {
-  try {
-   const sent=await jsonFetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${env.RESEND_API_KEY}`,'Content-Type':'application/json','Idempotency-Key':`kannika-booking/${id}`},body:JSON.stringify(email)});
-   if(sent.ok){const result=await sent.json();if(result.id)return reply(200,{id,saved:true,notification:'sent'});}
-   if(!sent.ok&&sent.status!==429&&sent.status<500)break;
-  }catch{}
+ if(!Number.isFinite(age)||age< -60000||age>23*60*60*1000)return reply(200,{id,saved:true,notification:'expired',clientNotification:'expired'});
+ const from=env.BOOKING_FROM_EMAIL||'Kannika <appointments@kannikabeauty.com>';
+ async function send(email,key){
+  for(let attempt=0;attempt<3;attempt++) {
+   if(attempt)await new Promise(resolve=>setTimeout(resolve,attempt*500));
+   try {
+    const sent=await jsonFetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${env.RESEND_API_KEY}`,'Content-Type':'application/json','Idempotency-Key':key},body:JSON.stringify(email)});
+    if(sent.ok&&(await sent.json()).id)return 'sent';
+    if(!sent.ok&&sent.status!==429&&sent.status<500)break;
+   }catch{}
+  }
+  return 'pending';
  }
- console.error('booking_email_notification_pending',{bookingId:id});
- return reply(202,{id,saved:true,notification:'pending'});
+ // Separate keys let either recipient be retried without resending to the other.
+ // Do not send an outdated awaiting-review receipt after a decision was made.
+ const [notification,clientNotification]=await Promise.all([
+  send(notificationEmail(stored,id,from),`kannika-booking/${id}`),
+  stored.status!=='pending'?Promise.resolve('superseded'):send(receiptEmail(stored,id,from),`kannika-receipt/${id}`)
+ ]);
+ if(notification==='pending'||clientNotification==='pending')console.error('booking_email_notification_pending',{bookingId:id,salon:notification,client:clientNotification});
+ return reply(notification==='pending'||clientNotification==='pending'?202:200,{id,saved:true,notification,clientNotification});
 }
