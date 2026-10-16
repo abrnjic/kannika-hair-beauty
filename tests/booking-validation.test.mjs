@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {validateBooking,bangkokToday} from '../dist/booking-validation.js';
+const now=new Date('2026-10-15T18:00:00Z');
+const valid={service:'Pedicure — men',date:'2026-10-16',time:'Morning',name:' Test Client ',email:' test@example.com ',notes:''};
+test('date follows Pattaya timezone across UTC midnight',()=>assert.equal(bangkokToday(now),'2026-10-16'));
+test('valid requests are trimmed',()=>assert.equal(validateBooking(valid,now).name,'Test Client'));
+test('past and impossible calendar dates are rejected',()=>{for(const date of ['2026-10-15','2026-02-30','2026-13-01','wrong'])assert.throws(()=>validateBooking({...valid,date},now));});
+test('unrecognized services, blank names and malformed emails are rejected',()=>{for(const change of [{service:'Unknown'},{name:'   '},{email:'invalid'},{email:'a@b'},{time:'Midnight'}])assert.throws(()=>validateBooking({...valid,...change},now));});
+test('field size limits are enforced',()=>{for(const change of [{name:'x'.repeat(101)},{notes:'x'.repeat(1001)},{email:'x'.repeat(250)+'@a.com'}])assert.throws(()=>validateBooking({...valid,...change},now));});

@@ -19,11 +19,27 @@ Open http://localhost:4173.
 - `dist/app.js`: appointment drafts, sharing and navigation
 - `dist/assets/`: transparent logo and emblem
 
-## Booking status
+## Booking status and Firebase
 
-The appointment form currently creates a local draft. It does not send email, reserve a time or store customer details on a server. The salon email, address, telephone, social profiles, prices and opening hours will be supplied later.
+Firebase project: `kannika-4f9b6`. The web configuration in `dist/firebase-config.js` is public app configuration, not a service account secret.
 
-`SALON_EMAIL` in `dist/app.js` can later enable a prepared email in the visitor’s email application. Automatic email delivery requires a server integration.
+Booking submission remains disabled (`bookingsEnabled = false`) until the live Firebase setup is verified. The current form creates a draft only.
+
+To activate:
+
+1. Create the default Cloud Firestore database in the Firebase console, in production mode. Review the location before creation.
+2. Enable Authentication → Sign-in method → Anonymous.
+3. Publish `firestore.rules` to this project's default database. If using Firebase CLI, run `firebase deploy --only firestore:rules --project kannika-4f9b6` after signing in. Do not replace rules for unrelated data without review.
+4. Verify that a signed-in guest can create their own valid pending request, cannot list bookings, cannot read another guest's request, and cannot update or delete requests.
+5. Set `bookingsEnabled = true`, verify a test submission and its document in the console, then deploy through GitHub/Vercel.
+
+The browser loads Firebase Auth and Firestore Lite from Google's CDN only when a live request is submitted. Anonymous authentication uses memory persistence. Customer details are stored in `bookings` with status `pending`; they do not reserve or confirm a calendar slot. The console owner can manage records through Firebase IAM. No client admin access is provided.
+
+Requests reuse the same ID for retries during the page session to avoid duplicate writes. Failure keeps the form data and does not show a success message.
+
+Email delivery is not configured. The salon email, address, telephone, social profiles, prices, opening hours and data retention policy still need to be supplied.
+
+Run input validation tests with `node --test tests/booking-validation.test.mjs`. Firebase rules and live persistence require separate verification before activation.
 
 ## Content and hosting
 
