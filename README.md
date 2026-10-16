@@ -37,7 +37,7 @@ The browser loads Firebase Auth and Firestore Lite from Google's CDN only when a
 
 Requests reuse the same ID for retries during the page session to avoid duplicate writes. Failure keeps the form data and does not show a success message.
 
-Email delivery is not configured. The salon contact email is kannika54932@gmail.com. The address, telephone, social profiles, prices, opening hours and data retention policy still need to be supplied.
+Email delivery is not configured. The salon contact email is kannika54932@gmail.com. The salon address is 20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ Bang Lamung District, Chon Buri 20150. Telephone, social profiles, prices, opening hours and data retention policy still need to be supplied.
 
 Run input validation tests with `node --test tests/booking-validation.test.mjs`. For the live integration checks, serve the repository root locally and open `tests/firebase-integration.html`. This creates one clearly labelled synthetic request in Firebase; do not include the test harness in the production `dist` directory.
 

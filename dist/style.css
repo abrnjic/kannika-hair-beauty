@@ -12,3 +12,5 @@
 #booking-error{color:#f1c7b1;line-height:1.8;font-size:12px;margin-top:15px}button:disabled{opacity:.65;cursor:wait}
 
 [hidden]{display:none!important}
+
+.footer-main{gap:28px;flex-wrap:wrap}.salon-contact{max-width:340px;overflow-wrap:anywhere}.salon-address{display:inline-block;margin-top:8px}.salon-address:hover{color:var(--gold)}.salon-contact .text-link{padding:5px 0;margin:3px 0 8px}
