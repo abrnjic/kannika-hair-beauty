@@ -304,5 +304,6 @@
   "We have emailed you a receipt and notified the salon. Your request is awaiting review. You will receive another email with the confirmed date and time once approved.": "ส่งอีเมลแจ้งรับคำขอให้คุณและแจ้งทางร้านแล้ว คำขอของคุณอยู่ระหว่างรอการพิจารณา เมื่ออนุมัติแล้ว คุณจะได้รับอีเมลอีกฉบับพร้อมวันและเวลานัดหมายที่ยืนยัน",
   "Your request is saved, but we could not email your receipt yet. Try sending the notifications again below or call +66 81 727 4874.": "บันทึกคำขอของคุณแล้ว แต่ยังส่งอีเมลแจ้งรับคำขอไม่สำเร็จ กรุณากดลองส่งอีเมลอีกครั้งด้านล่าง หรือโทร +66 81 727 4874",
   "Your receipt has been emailed, but the salon notification could not be sent. Retry below or call +66 81 727 4874. Your appointment still requires salon approval.": "ส่งอีเมลแจ้งรับคำขอให้คุณแล้ว แต่แจ้งทางร้านไม่สำเร็จ กรุณาลองอีกครั้งด้านล่าง หรือโทร +66 81 727 4874 การนัดหมายยังต้องได้รับอนุมัติจากร้าน",
-  "Retry email notifications ↗": "ลองส่งอีเมลแจ้งเตือนอีกครั้ง ↗"
+  "Retry email notifications ↗": "ลองส่งอีเมลแจ้งเตือนอีกครั้ง ↗",
+  "Opening hours: 09:00–22:00 (Pattaya time)": "เวลาเปิดทำการ: 09:00–22:00 น. (เวลาพัทยา)"
 }

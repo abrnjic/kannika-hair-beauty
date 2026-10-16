@@ -37,7 +37,7 @@ The browser loads Firebase Auth from Google's CDN only when a live request is su
 
 Requests reuse the same ID for retries during the page session to avoid duplicate writes. A storage failure keeps the form data. If storage succeeds but email fails, the UI explicitly shows that the request is saved and offers an idempotent notification retry plus the salon phone number.
 
-New booking notifications are sent to kannika54932@gmail.com through Resend; clients receive an immediate awaiting-review receipt, then status emails when an administrator saves a decision. The salon contact email is kannika54932@gmail.com. The salon address is 20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ Bang Lamung District, Chon Buri 20150. The salon telephone is +66 81 727 4874. Social profiles, prices, opening hours and data retention policy still need to be supplied.
+New booking notifications are sent to kannika54932@gmail.com through Resend; clients receive an immediate awaiting-review receipt, then status emails when an administrator saves a decision. The salon contact email is kannika54932@gmail.com. The salon address is 20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ Bang Lamung District, Chon Buri 20150. The salon telephone is +66 81 727 4874. Opening hours are 09:00–22:00, Pattaya time. The owner has not specified opening days. Social profiles, prices and data retention policy still need to be supplied.
 
 Run input validation tests with `node --test tests/booking-validation.test.mjs`. The legacy `tests/firebase-integration.html` harness requires the updated booking API to be served as well (not just a static Python server). This creates one clearly labelled synthetic request in Firebase; do not include the test harness in the production `dist` directory.
 
