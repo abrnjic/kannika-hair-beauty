@@ -62,3 +62,5 @@ The Google provider must be enabled in Authentication and the production domain 
 Decisions do not send email or check for staff/calendar conflicts. Staff must contact clients separately and check availability before confirming.
 
 Run policy and validation checks with `node --test tests/*.test.mjs`.
+
+Admin verification (2026-10-16): Google-authenticated owner access, live request listing, confirming an exact appointment and declining a synthetic request were checked on the production admin page. Ten local policy/input tests pass. Five live access checks deny unauthenticated and guest listing, guest role access, self-assigned roles and guest confirmation. Serve the repository root and open `tests/admin-access.html` to repeat these negative access checks without creating appointments.
