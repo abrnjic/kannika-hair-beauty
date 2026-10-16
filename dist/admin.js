@@ -1,10 +1,12 @@
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
-import {initializeAuth, browserSessionPersistence, browserPopupRedirectResolver, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
+import {initializeAuth, browserSessionPersistence, browserPopupRedirectResolver, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
 import {getFirestore, doc, getDocFromServer, getDocsFromServer, collection, query, orderBy, limit, startAfter, runTransaction, serverTimestamp} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
 import {firebaseConfig, salonEmail} from './firebase-config.js';
 import {validateDecision, decisionIsCurrent} from './admin-policy.js';
 import {bangkokToday} from './booking-validation.js';
-const app = initializeApp(firebaseConfig, 'kannika-admin');
+// Use same-origin auth helpers on production so redirect sign-in survives storage partitioning.
+const sameTabSignIn = location.hostname === 'kannika-hair-beauty.vercel.app';
+const app = initializeApp({...firebaseConfig, ...(sameTabSignIn ? {authDomain: location.hostname} : {})}, 'kannika-admin');
 const auth = initializeAuth(app, {persistence: browserSessionPersistence, popupRedirectResolver: browserPopupRedirectResolver});
 const db = getFirestore(app);
 const $ = selector => document.querySelector(selector);
@@ -84,13 +86,15 @@ $('#decision-form').addEventListener('submit',async event=>{
 $('#sign-in').addEventListener('click',async()=>{
  setError('#auth-error');$('#sign-in').disabled=true;
  const provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});
- try{await signInWithPopup(auth,provider)}catch(error){setError('#auth-error',({'auth/popup-blocked':'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.','auth/popup-closed-by-user':'Sign-in was closed. Try again when ready.','auth/unauthorized-domain':'This website needs to be added to Firebase Authentication authorised domains.'}[error.code])||'Could not sign in. Please try again.')}
+ try{if(sameTabSignIn){await signInWithRedirect(auth,provider)}else{await signInWithPopup(auth,provider)}}catch(error){setError('#auth-error',({'auth/popup-blocked':'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.','auth/popup-closed-by-user':'Sign-in was closed. Try again when ready.','auth/unauthorized-domain':'This website needs to be added to Firebase Authentication authorised domains.','auth/network-request-failed':'Could not reach Google sign-in. Check your connection and try again.','auth/web-storage-unsupported':'Sign-in needs browser storage. Open this page in a regular browser tab.'}[error.code])||'Could not sign in. Please try again.')}
  finally{$('#sign-in').disabled=false}
 });
+// Recover the result after Google returns to this tab; never log credentials or tokens.
+const redirectResult = getRedirectResult(auth).then(()=>null).catch(error=>error);
 for(const id of ['#sign-out','#login-sign-out'])$(id).addEventListener('click',async()=>{if(saving){toast('Please wait for the current decision to finish saving.');return}try{await signOut(auth)}catch{toast('Could not sign out. Please try again.')}});
 onAuthStateChanged(auth,async user=>{
  const currentSession=++session;clearData();loading=false;$('#login-panel').hidden=false;$('#sign-in').hidden=!!user;$('#login-sign-out').hidden=!user;setError('#auth-error');
- if(!user)return;
+ if(!user){const error=await redirectResult;if(currentSession===session&&error)setError('#auth-error','Google sign-in could not finish ('+(error.code||'unknown')+'). Please try again.');return;}
  $('#auth-error').textContent='Checking administrator access…';$('#auth-error').hidden=false;
  try{
   if(!user.emailVerified||!user.providerData.some(provider=>provider.providerId==='google.com'))throw new Error('Sign in using an authorised Google account.');
