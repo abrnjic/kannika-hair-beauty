@@ -33,11 +33,11 @@ Verified against the live project on 2026-10-16:
 
 To change the rules with Firebase CLI, sign in and run `firebase deploy --only firestore:rules --project kannika-4f9b6`. To temporarily return to draft-only mode, set `bookingsEnabled = false` in `dist/firebase-config.js` and deploy.
 
-The browser loads Firebase Auth and Firestore Lite from Google's CDN only when a live request is submitted. Anonymous authentication uses memory persistence. Customer details are stored in `bookings` with status `pending`; they do not reserve or confirm a calendar slot. The console owner can manage records through Firebase IAM. No client admin access is provided.
+The browser loads Firebase Auth and Firestore Lite from Google's CDN only when a live request is submitted. Anonymous authentication uses memory persistence. Customer details are stored in `bookings` with status `pending`; they do not reserve or confirm a calendar slot. The console owner can manage records through Firebase IAM. Authorised salon administrators can manage requests at `/admin`.
 
 Requests reuse the same ID for retries during the page session to avoid duplicate writes. Failure keeps the form data and does not show a success message.
 
-Email delivery is not configured. The salon email, address, telephone, social profiles, prices, opening hours and data retention policy still need to be supplied.
+Email delivery is not configured. The salon contact email is kannika54932@gmail.com. The address, telephone, social profiles, prices, opening hours and data retention policy still need to be supplied.
 
 Run input validation tests with `node --test tests/booking-validation.test.mjs`. For the live integration checks, serve the repository root locally and open `tests/firebase-integration.html`. This creates one clearly labelled synthetic request in Firebase; do not include the test harness in the production `dist` directory.
 
@@ -55,7 +55,7 @@ The protected admin workspace is available at `/admin` on Vercel (`/admin.html` 
 
 Administrators can review requests, search loaded pages, confirm a specific date/time in Pattaya, decline requests and reopen them for review. Confirmations are transactional and reject stale edits. Requests load in pages of 100, newest first; summary counts and search apply to loaded records. Customer contact and request fields cannot be changed, and records cannot be deleted through the app.
 
-Only Google-authenticated, verified users with an `admins/{firebaseUid}` document containing `role: "owner"` can read all requests or save decisions. These role documents must be created by a project owner in the Firebase console; client-side role creation is denied. An unapproved signed-in account can see only its own Firebase UID to request access.
+Google-authenticated, verified users signing in as `kannika54932@gmail.com`, or with an `admins/{firebaseUid}` document containing `role: "owner"`, can read all requests or save decisions. The salon email is enforced in Firestore rules as well as the UI; the existing owner role remains active. These role documents must be created by a project owner in the Firebase console; client-side role creation is denied. An unapproved signed-in account can see only its own Firebase UID to request access.
 
 The Google provider must be enabled in Authentication and the production domain must be in its authorised domains. Deploy `firestore.rules` whenever permissions change. Do not add staff role records without owner authorisation.
 

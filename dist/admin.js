@@ -1,7 +1,7 @@
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
 import {initializeAuth, browserSessionPersistence, browserPopupRedirectResolver, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
 import {getFirestore, doc, getDocFromServer, getDocsFromServer, collection, query, orderBy, limit, startAfter, runTransaction, serverTimestamp} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
-import {firebaseConfig} from './firebase-config.js';
+import {firebaseConfig, salonEmail} from './firebase-config.js';
 import {validateDecision, decisionIsCurrent} from './admin-policy.js';
 import {bangkokToday} from './booking-validation.js';
 const app = initializeApp(firebaseConfig, 'kannika-admin');
@@ -94,8 +94,9 @@ onAuthStateChanged(auth,async user=>{
  $('#auth-error').textContent='Checking administrator access…';$('#auth-error').hidden=false;
  try{
   if(!user.emailVerified||!user.providerData.some(provider=>provider.providerId==='google.com'))throw new Error('Sign in using an authorised Google account.');
-  const role=await getDocFromServer(doc(db,'admins',user.uid));if(currentSession!==session)return;setError('#auth-error');
-  if(!role.exists()||role.data().role!=='owner'){$('#access-pending').hidden=false;$('#pending-email').textContent=user.email||'';$('#pending-uid').value=user.uid;return}
+  const salonAccount=user.email===salonEmail;
+  const role=salonAccount?null:await getDocFromServer(doc(db,'admins',user.uid));if(currentSession!==session)return;setError('#auth-error');
+  if(!salonAccount&&(!role?.exists()||role.data().role!=='owner')){$('#access-pending').hidden=false;$('#pending-email').textContent=user.email||'';$('#pending-uid').value=user.uid;return}
   administrator=user;$('#login-panel').hidden=true;$('#workspace').hidden=false;$('#admin-email').textContent=user.email||'';await loadRequests();
  }catch(error){if(currentSession===session)setError('#auth-error',error.message?.startsWith('Sign in')?error.message:'Could not verify administrator access. Check your connection, then sign out and try again.')}
 });

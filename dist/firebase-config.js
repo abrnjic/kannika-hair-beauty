@@ -9,3 +9,6 @@ export const firebaseConfig = {
 };
 // Enable only after Anonymous Auth and firestore.rules are deployed and verified.
 export const bookingsEnabled = true;
+
+// Public salon contact; administrator access is also enforced by Firestore rules.
+export const salonEmail = 'kannika54932@gmail.com';
