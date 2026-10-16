@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {handleStatus,statusEmail} from '../server/booking-status.mjs';
+import {handleStatus,statusEmail,directions} from '../server/booking-status.mjs';
 const now=new Date('2026-10-16T03:00:00Z'),id='11111111-1111-4111-8111-111111111111';
 const base={name:'ลูกค้า <img src=x>',email:'client@example.com',service:"Women's haircut",date:'2026-11-02',time:'Morning',status:'pending',language:'th'};
 const decision={status:'confirmed',confirmedDate:'2026-11-02',confirmedTime:'10:30'};
@@ -37,3 +37,9 @@ test('mail failure saves decision and same decision retry uses original event ke
 test('old unchanged event cannot replay after deduplication window',async()=>{const old='2026-10-14T00:00:00Z',h=harness({data:{...base,...decision,updatedAt:old}}),request=req();request.body.expected={status:'confirmed',updatedAt:Date.parse(old)};assert.equal((await handleStatus(request,h.options)).body.notification,'expired');assert.ok(!h.calls.some(c=>c.url.includes('resend.com')||c.url.endsWith(':commit')))});
 test('request cannot override stored recipient or language',async()=>{const h=harness(),request=req();Object.assign(request.body,{email:'attacker@example.com',language:'en',to:'attacker@example.com'});await handleStatus(request,h.options);assert.deepEqual(mail(h).to,['client@example.com']);assert.match(mail(h).subject,/ยืนยัน/)});
 test('rejects malformed requests, invalid decisions and foreign origins before database or mail calls',async()=>{for(const change of [{headers:{}},{headers:{origin:'https://evil.example',authorization:'Bearer '+jwt()}},{body:{id:'../x',expected:{}}},{body:{id,expected:{status:'pending',updatedAt:null},decision:{status:'unknown'}}}]){const h=harness();assert.ok((await handleStatus(req(change),h.options)).status>=400);assert.equal(h.calls.length,0)}});
+
+test('confirmed emails provide localised Google and Apple directions in HTML and plain text',()=>{
+ const address='20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ Bang Lamung District, Chon Buri 20150';
+ for(const language of ['en','th']){const email=statusEmail({...base,...decision,language},id,'salon');assert.ok(email.text.includes(address));assert.ok(email.html.includes(address));for(const url of [directions.google,directions.apple]){assert.ok(email.text.includes(url));assert.ok(email.html.includes(url.replaceAll('&','&amp;')));const parsed=new URL(url);assert.equal(parsed.protocol,'https:');assert.equal(parsed.searchParams.get('destination'),address+', Thailand');assert.ok(!parsed.searchParams.has('origin'));assert.ok(!parsed.searchParams.has('source'))}assert.equal(new URL(directions.google).searchParams.get('api'),'1');assert.equal(new URL(directions.google).pathname,'/maps/dir/');assert.equal(new URL(directions.apple).hostname,'maps.apple.com');assert.equal(new URL(directions.apple).pathname,'/directions');assert.match(email.html,language==='th'?/ดูเส้นทางบน Google Maps/:/Open in Google Maps/);assert.match(email.html,language==='th'?/ดูเส้นทางบน Apple Maps/:/Open in Apple Maps/)}
+});
+test('unapproved and declined status emails do not show directions to an unconfirmed appointment',()=>{for(const status of ['pending','declined']){const email=statusEmail({...base,...decision,status},id,'salon');assert.ok(!email.text.includes('maps.apple.com'));assert.ok(!email.html.includes('google.com/maps/dir/'))}});
