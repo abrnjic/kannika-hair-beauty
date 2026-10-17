@@ -1,5 +1,5 @@
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
-import {initializeAuth,browserLocalPersistence,browserSessionPersistence,inMemoryPersistence,browserPopupRedirectResolver,GoogleAuthProvider,signInWithRedirect,signInWithPopup,getRedirectResult,sendSignInLinkToEmail,isSignInWithEmailLink,signInWithEmailLink,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
+import {initializeAuth,indexedDBLocalPersistence,browserLocalPersistence,browserSessionPersistence,inMemoryPersistence,browserPopupRedirectResolver,GoogleAuthProvider,signInWithRedirect,signInWithPopup,getRedirectResult,sendSignInLinkToEmail,isSignInWithEmailLink,signInWithEmailLink,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
 import {getFirestore,doc,getDocFromServer,collection,getDocs,query,orderBy,limit} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
 import {firebaseConfig} from './firebase-config.js';
 import {t,language,locale,localizeValidation} from './i18n.js';
@@ -7,7 +7,7 @@ import {enrolMember} from './loyalty-store.js';
 import {rewardSummary} from './loyalty-policy.js';
 const $=s=>document.querySelector(s),production=location.hostname==='kannika-hair-beauty.vercel.app';
 const app=initializeApp({...firebaseConfig,...(production?{authDomain:location.hostname}:{})},'kannika-club');
-const auth=initializeAuth(app,{persistence:[browserLocalPersistence,browserSessionPersistence,inMemoryPersistence],popupRedirectResolver:browserPopupRedirectResolver}),db=getFirestore(app);auth.languageCode=language;
+const auth=initializeAuth(app,{persistence:[indexedDBLocalPersistence,browserLocalPersistence,browserSessionPersistence,inMemoryPersistence],popupRedirectResolver:browserPopupRedirectResolver}),db=getFirestore(app);auth.languageCode=language;
 let busy=false,session=0;let emailLink=isSignInWithEmailLink(auth,location.href)?location.href:null;let processingLink=!!emailLink;
 const pendingEmailStores=[()=>localStorage,()=>sessionStorage];
 function savedEmail(){for(const getStore of pendingEmailStores){try{const email=getStore().getItem('kannikaClubEmail');if(email)return email}catch{}}return ''}
