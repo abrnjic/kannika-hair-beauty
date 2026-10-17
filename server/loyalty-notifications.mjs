@@ -1,8 +1,8 @@
+import {beautyClubEmail} from './beauty-club-email.mjs';
 import {rewardSummary} from '../dist/loyalty-policy.js';
 import {recipient} from './booking-notifications.mjs';
 const project='kannika-4f9b6',root=`https://firestore.googleapis.com/v1/projects/${project}/databases/(default)/documents`;
 const decode=d=>Object.fromEntries(Object.entries(d.fields??{}).map(([k,v])=>[k,v.stringValue??v.timestampValue??(v.integerValue!==undefined?Number(v.integerValue):v.booleanValue)]));
-const escape=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function loyaltyEmail(member,event,from){
  const th=event.language==='th',s=rewardSummary(event),url='https://kannika-hair-beauty.vercel.app'+(th?'/th/club':'/club');
  const title=th?(event.type==='visit'?'ขอบคุณที่มาใช้บริการ Kannika':'อัปเดตสิทธิพิเศษ Beauty Club'):(event.type==='visit'?'Thank you for visiting Kannika':'Your Beauty Club reward update');
@@ -10,7 +10,7 @@ export function loyaltyEmail(member,event,from){
  const progress=th?`มาใช้บริการสะสม ${s.stamps} ครั้ง อีก ${s.next} ครั้งถึงสิทธิพิเศษถัดไป`:`${s.stamps} lifetime visits. ${s.next} more visits to your next reward.`;
  const rewards=th?`สิทธิ์ส่วนลด 10% ที่ใช้ได้: ${s.discounts} · ทรีตเมนต์ฟรีที่ใช้ได้: ${s.gifts}`:`10% rewards available: ${s.discounts} · Complimentary treatments available: ${s.gifts}`;
  const open=th?'เปิดบัตร Beauty Club':'Open your Beauty Club card';
- return {from,to:[member.email],reply_to:recipient,subject:'Kannika — '+title,text:[title,action,event.date,progress,rewards,open+': '+url,recipient].join('\n'),html:`<!doctype html><html lang="${th?'th':'en'}"><body style="background:#151715;color:#eeeade;font:16px/1.7 Arial,sans-serif"><main style="max-width:620px;padding:32px;margin:auto"><h1 style="color:#cbb17c">KANNIKA</h1><h2>${title}</h2><p>${action}</p><p>${escape(event.date)}</p><p>${progress}</p><p>${rewards}</p><p><a style="color:#cbb17c" href="${url}">${open} ↗</a></p><p>${recipient}</p></main></body></html>`};
+ return {from,to:[member.email],reply_to:recipient,subject:'Kannika — '+title,text:[title,action,event.date,progress,rewards,open+': '+url,recipient].join('\n'),html:beautyClubEmail({language:event.language,title,paragraphs:[action,event.date],url,button:open,summary:[progress,rewards]})};
 }
 export async function handleLoyaltyNotification(request,{fetchImpl=fetch,env=process.env,now=()=>new Date()}={}){
  const reply=(status,body)=>({status,body});if(request.method!=='POST')return reply(405,{error:'method_not_allowed'});

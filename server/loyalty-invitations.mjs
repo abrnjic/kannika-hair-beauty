@@ -1,7 +1,7 @@
+import {beautyClubEmail} from './beauty-club-email.mjs';
 import {createHash} from 'node:crypto';
 import {recipient} from './booking-notifications.mjs';
 const project='kannika-4f9b6',root=`https://firestore.googleapis.com/v1/projects/${project}/databases/(default)/documents`;
-const escape=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function invitationEmail(client,from){
  const th=client.language==='th',url='https://kannika-hair-beauty.vercel.app'+(th?'/th/club':'/club');
  const title=th?'ขอเชิญเข้าร่วม Kannika Beauty Club':'You’re invited to Kannika Beauty Club';
@@ -10,7 +10,7 @@ export function invitationEmail(client,from){
  const instructions=th?'เปิดลิงก์ด้านล่างและลงชื่อเข้าใช้ด้วยอีเมลที่ได้รับคำเชิญนี้ผ่าน Google หรือลิงก์ทางอีเมล จากนั้นกรอกชื่อและยอมรับกติกาเพื่อเข้าร่วม':'Open the link below and sign in with the email that received this invitation, using Google or an email sign-in link. Then enter your name and accept the programme rules to join.';
  const privacy=th?'คำเชิญนี้ยังไม่ได้สมัครสมาชิกให้คุณ การเข้าร่วมเป็นทางเลือก และการรับข่าวสารโปรโมชั่นต้องให้ความยินยอมแยกต่างหาก หากคุณไม่ได้ขอคำเชิญนี้ สามารถละเว้นอีเมลนี้ได้':'This invitation has not enrolled you. Joining is optional, and promotional messages require separate consent. If you did not request this invitation, you can ignore this email.';
  const button=th?'เข้าร่วม Beauty Club':'Join Beauty Club';
- return {from,to:[client.email],reply_to:recipient,subject:'Kannika — '+title,text:[greeting,title,intro,instructions,button+': '+url,privacy,recipient].join('\n\n'),html:`<!doctype html><html lang="${th?'th':'en'}"><body style="background:#151715;color:#eeeade;font:16px/1.7 Arial,sans-serif"><main style="max-width:620px;padding:32px;margin:auto"><h1 style="color:#cbb17c">KANNIKA</h1><p>${escape(greeting)}</p><h2>${title}</h2><p>${intro}</p><p>${instructions}</p><p><a style="display:inline-block;background:#cbb17c;color:#151715;padding:14px 22px;text-decoration:none" href="${url}">${button} ↗</a></p><p>${privacy}</p><p>${recipient}</p></main></body></html>`};
+ return {from,to:[client.email],reply_to:recipient,subject:'Kannika — '+title,text:[greeting,title,intro,instructions,button+': '+url,privacy,recipient].join('\n\n'),html:beautyClubEmail({language:client.language,title,paragraphs:[greeting,intro,instructions],url,button,footnote:privacy})};
 }
 export async function handleLoyaltyInvitation(request,{fetchImpl=fetch,env=process.env,now=()=>new Date()}={}){
  const reply=(status,body)=>({status,body});
