@@ -3,3 +3,5 @@
 #approval-panel{max-width:640px;margin-top:40px}#approval-panel .eyebrow{margin-bottom:20px}
 
 #access-panel>#club-google{width:100%;justify-content:center;margin-right:0}#email-access{margin-top:24px}#email-access summary{font-size:12px}#card-welcome{font-size:44px;margin:22px 0 12px}.member-view #club-intro,.member-view>.club-grid{display:none}.member-view #card-panel{margin-top:26px;padding-top:0;border-top:0}.member-view #join-panel,.member-view #approval-panel{margin-top:26px}.club-rules{max-width:720px;margin-top:35px}#club-loading{color:var(--gold)}@media(max-width:700px){#card-welcome{font-size:36px}}
+
+.club-grid>#access-panel{order:-1}#club-intro h1{font-size:clamp(44px,5vw,64px)}

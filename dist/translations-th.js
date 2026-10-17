@@ -461,5 +461,6 @@ export default {
   "Your card stays signed in on this device. Sign out when using a shared device.": "บัตรของคุณจะคงการลงชื่อเข้าใช้ไว้บนอุปกรณ์นี้ โปรดออกจากระบบหากใช้อุปกรณ์ร่วมกับผู้อื่น",
   "Enter the email that received this link. We will open your card.": "กรอกอีเมลที่ได้รับลิงก์นี้ แล้วเราจะเปิดบัตรให้คุณ",
   "This link has expired or was already used. Open with Google or request a new link.": "ลิงก์นี้หมดอายุหรือถูกใช้แล้ว เปิดด้วย Google หรือขอลิงก์ใหม่",
-  "Check your inbox and tap the link. Your card opens automatically on this browser.": "ตรวจสอบอีเมลแล้วแตะลิงก์ บัตรจะเปิดอัตโนมัติบนเบราว์เซอร์นี้"
+  "Check your inbox and tap the link. Your card opens automatically on this browser.": "ตรวจสอบอีเมลแล้วแตะลิงก์ บัตรจะเปิดอัตโนมัติบนเบราว์เซอร์นี้",
+  "Open your card to see your stamps and rewards.": "เปิดบัตรเพื่อดูแสตมป์และสิทธิพิเศษของคุณ"
 };
