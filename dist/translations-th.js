@@ -451,5 +451,15 @@ export default {
   "Membership activated and confirmation email sent.": "เปิดใช้งานสมาชิกและส่งอีเมลยืนยันแล้ว",
   "Membership is active. This approval is too old to resend safely. Contact the client directly.": "สมาชิกใช้งานได้แล้ว การอนุมัตินี้เก่าเกินกว่าจะส่งอีเมลซ้ำได้อย่างปลอดภัย กรุณาติดต่อลูกค้าโดยตรง",
   "Membership is already active. No new approval was created.": "สมาชิกใช้งานได้อยู่แล้ว ไม่มีการสร้างการอนุมัติใหม่",
-  "Membership is active, but the confirmation email could not be confirmed. Use Retry approval email.": "สมาชิกใช้งานได้แล้ว แต่ยังยืนยันการส่งอีเมลไม่ได้ กรุณากดลองส่งอีเมลอนุมัติอีกครั้ง"
+  "Membership is active, but the confirmation email could not be confirmed. Use Retry approval email.": "สมาชิกใช้งานได้แล้ว แต่ยังยืนยันการส่งอีเมลไม่ได้ กรุณากดลองส่งอีเมลอนุมัติอีกครั้ง",
+  "Your Beauty Club card.": "บัตร Beauty Club ของคุณ",
+  "Opening your card…": "กำลังเปิดบัตรของคุณ…",
+  "Open your card.": "เปิดบัตรของคุณ",
+  "Use the same account you used to join.": "ใช้บัญชีเดียวกับที่ใช้สมัครสมาชิก",
+  "Open with Google ↗": "เปิดด้วย Google ↗",
+  "Use email instead": "ใช้อีเมลแทน",
+  "Your card stays signed in on this device. Sign out when using a shared device.": "บัตรของคุณจะคงการลงชื่อเข้าใช้ไว้บนอุปกรณ์นี้ โปรดออกจากระบบหากใช้อุปกรณ์ร่วมกับผู้อื่น",
+  "Enter the email that received this link. We will open your card.": "กรอกอีเมลที่ได้รับลิงก์นี้ แล้วเราจะเปิดบัตรให้คุณ",
+  "This link has expired or was already used. Open with Google or request a new link.": "ลิงก์นี้หมดอายุหรือถูกใช้แล้ว เปิดด้วย Google หรือขอลิงก์ใหม่",
+  "Check your inbox and tap the link. Your card opens automatically on this browser.": "ตรวจสอบอีเมลแล้วแตะลิงก์ บัตรจะเปิดอัตโนมัติบนเบราว์เซอร์นี้"
 };
