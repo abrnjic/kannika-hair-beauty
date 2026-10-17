@@ -34,7 +34,7 @@ async function loadCard(user){
 const redirectResult=getRedirectResult(auth).catch(()=>{message('Sign-in could not finish. Please try again.')});
 onAuthStateChanged(auth,user=>{if(!processingLink)loadCard(user).catch(()=>accessError('Could not load your card. Please refresh and try again.'))});
 function emailEntry(){
- $('#club-loading').hidden=true;$('#access-panel').hidden=false;$('#email-access').open=true;
+ $('#club-loading').hidden=true;$('#access-panel').hidden=false;
  $('#link-form button').textContent=t(emailLink?'Open my card ↗':'Email my sign-in link ↗');
  if(emailLink){$('#club-email').value=savedEmail();message('Enter the email that received this link. We will open your card.');$('#club-email').focus()}
 }

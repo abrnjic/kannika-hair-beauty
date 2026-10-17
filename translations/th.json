@@ -462,5 +462,8 @@
   "Enter the email that received this link. We will open your card.": "กรอกอีเมลที่ได้รับลิงก์นี้ แล้วเราจะเปิดบัตรให้คุณ",
   "This link has expired or was already used. Open with Google or request a new link.": "ลิงก์นี้หมดอายุหรือถูกใช้แล้ว เปิดด้วย Google หรือขอลิงก์ใหม่",
   "Check your inbox and tap the link. Your card opens automatically on this browser.": "ตรวจสอบอีเมลแล้วแตะลิงก์ บัตรจะเปิดอัตโนมัติบนเบราว์เซอร์นี้",
-  "Open your card to see your stamps and rewards.": "เปิดบัตรเพื่อดูแสตมป์และสิทธิพิเศษของคุณ"
+  "Open your card to see your stamps and rewards.": "เปิดบัตรเพื่อดูแสตมป์และสิทธิพิเศษของคุณ",
+  "Use any email address. No Google account needed.": "ใช้อีเมลใดก็ได้ ไม่จำเป็นต้องมีบัญชี Google",
+  "Or, if you prefer": "หรือเลือกเข้าสู่ระบบด้วย",
+  "Use the same email you used to join.": "ใช้อีเมลเดียวกับที่ใช้สมัครสมาชิก"
 }
