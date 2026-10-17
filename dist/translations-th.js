@@ -398,5 +398,19 @@ export default {
   "Beauty Club ↗": "Beauty Club ↗",
   "Selected treatment or visit note (visible to client)": "ทรีตเมนต์ที่เลือกหรือหมายเหตุการมาใช้บริการ (ลูกค้ามองเห็นได้)",
   "Add client stamp": "เพิ่มแสตมป์ให้ลูกค้า",
-  "Add a stamp after a completed, paid visit. Find the client by email to get started.": "เพิ่มแสตมป์หลังรับบริการและชำระเงินเรียบร้อยแล้ว เริ่มต้นด้วยการค้นหาลูกค้าจากอีเมล"
+  "Add a stamp after a completed, paid visit. Find the client by email to get started.": "เพิ่มแสตมป์หลังรับบริการและชำระเงินเรียบร้อยแล้ว เริ่มต้นด้วยการค้นหาลูกค้าจากอีเมล",
+  "Invite client ↗": "เชิญลูกค้า ↗",
+  "Invite a client to Beauty Club": "เชิญลูกค้าเข้าร่วม Beauty Club",
+  "Send a personal invitation. The client signs in and accepts the programme rules before their card is created.": "ส่งคำเชิญให้ลูกค้า ลูกค้าจะต้องลงชื่อเข้าใช้และยอมรับกติกาก่อนสร้างบัตรสมาชิก",
+  "Client name": "ชื่อลูกค้า",
+  "Client email": "อีเมลลูกค้า",
+  "Invitation language": "ภาษาของคำเชิญ",
+  "English": "อังกฤษ",
+  "Thai": "ไทย",
+  "Check the email address with the client before sending. An invitation does not create a membership or subscribe them to offers.": "ตรวจสอบอีเมลกับลูกค้าก่อนส่ง คำเชิญนี้จะยังไม่สร้างสมาชิกหรือสมัครรับโปรโมชั่น",
+  "Send invitation ↗": "ส่งคำเชิญ ↗",
+  "Close invitation form": "ปิดแบบฟอร์มคำเชิญ",
+  "Sending invitation…": "กำลังส่งคำเชิญ…",
+  "Invitation sent. The client must sign in and accept the rules to join.": "ส่งคำเชิญแล้ว ลูกค้าต้องลงชื่อเข้าใช้และยอมรับกติกาเพื่อเข้าร่วม",
+  "Invitation could not be confirmed. Check the address and retry; the same invitation will not be sent twice today.": "ยังยืนยันการส่งคำเชิญไม่ได้ ตรวจสอบอีเมลแล้วลองอีกครั้ง คำเชิญเดิมจะไม่ถูกส่งซ้ำภายในวันนี้"
 };

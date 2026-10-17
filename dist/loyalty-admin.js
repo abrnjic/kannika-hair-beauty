@@ -1,7 +1,7 @@
 import {collection,query,where,getDocs,getDocFromServer,doc,orderBy,limit} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
 import {recordLoyaltyEvent} from './loyalty-store.js';
 import {rewardSummary} from './loyalty-policy.js';
-import {t,localizeValidation} from './i18n.js';
+import {t,language,localizeValidation} from './i18n.js';
 import {bangkokToday} from './booking-validation.js';
 export function setupLoyaltyAdmin(db,getUser){
  const $=s=>document.querySelector(s);let memberId=null,requestId=crypto.randomUUID(),busy=false,generation=0;
@@ -19,6 +19,15 @@ export function setupLoyaltyAdmin(db,getUser){
   const results=await getDocs(query(collection(db,'loyaltyMembers'),where('email','==',email.trim().toLowerCase()),limit(2)));if(current!==generation||getUser()?.uid!==user.uid)return;
   if(results.size!==1){message('Ask the client to join Beauty Club first.');return}memberId=results.docs[0].id;requestId=crypto.randomUUID();await display();
  }
+ let inviting=false,inviteGeneration=0;
+ const inviteMessage=text=>{$('#invite-message').textContent=t(text);$('#invite-message').hidden=!text};
+ $('#invite-language').value=language;
+ $('#invite-client').addEventListener('click',()=>{$('#invite-panel').hidden=false;$('#invite-panel').scrollIntoView({behavior:'smooth'});$('#invite-name').focus({preventScroll:true})});
+ $('#invite-close').addEventListener('click',()=>{$('#invite-panel').hidden=true;$('#invite-client').focus()});
+ $('#invite-form').addEventListener('submit',async e=>{e.preventDefault();const user=getUser(),current=inviteGeneration;if(inviting||!user)return;inviting=true;$('#invite-send').disabled=true;inviteMessage('Sending invitation…');const body={name:$('#invite-name').value.trim(),email:$('#invite-email').value.trim(),language:$('#invite-language').value};
+  try{const response=await fetch('/api/loyalty-invitation',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+await user.getIdToken()},body:JSON.stringify(body)});const result=await response.json();if(current!==inviteGeneration||getUser()?.uid!==user.uid)return;if(!response.ok||result.notification!=='sent')throw Error();inviteMessage('Invitation sent. The client must sign in and accept the rules to join.')}catch{if(current===inviteGeneration)inviteMessage('Invitation could not be confirmed. Check the address and retry; the same invitation will not be sent twice today.')}finally{inviting=false;$('#invite-send').disabled=false}
+ });
+ localizeValidation($('#invite-form'));
  $('#add-client-stamp').addEventListener('click',()=>{$('#loyalty-action').value='visit';requestId=crypto.randomUUID();$('#loyalty-section').scrollIntoView({behavior:'smooth'});$('#loyalty-email').focus({preventScroll:true})});
  $('#loyalty-lookup').addEventListener('submit',async e=>{e.preventDefault();if(busy)return;try{await lookup($('#loyalty-email').value)}catch{message('Could not load membership. Please try again.')}});
  $('#loyalty-form').addEventListener('input',()=>{requestId=crypto.randomUUID()});
@@ -28,5 +37,5 @@ export function setupLoyaltyAdmin(db,getUser){
   finally{busy=false;$('#loyalty-save').disabled=false}
  });
  $('#loyalty-date').value=bangkokToday();$('#loyalty-date').max=bangkokToday();for(const id of ['#loyalty-form','#loyalty-lookup'])localizeValidation($(id));
- return {reset(){generation++;memberId=null;$('#loyalty-actions').hidden=true;$('#loyalty-history').replaceChildren();$('#loyalty-lookup').reset();$('#loyalty-form').reset();$('#loyalty-member').textContent='';$('#loyalty-totals').textContent='';message('')},async open(booking){$('#loyalty-email').value=booking.email||'';$('#request-dialog').close();$('#loyalty-section').scrollIntoView({behavior:'smooth'});try{await lookup(booking.email,booking.id);$('#loyalty-date').value=booking.confirmedDate||bangkokToday()}catch{message('Could not load membership. Please try again.')}}};
+ return {reset(){inviteGeneration++;$('#invite-panel').hidden=true;$('#invite-form').reset();$('#invite-language').value=language;inviteMessage('');generation++;memberId=null;$('#loyalty-actions').hidden=true;$('#loyalty-history').replaceChildren();$('#loyalty-lookup').reset();$('#loyalty-form').reset();$('#loyalty-member').textContent='';$('#loyalty-totals').textContent='';message('')},async open(booking){$('#loyalty-email').value=booking.email||'';$('#request-dialog').close();$('#loyalty-section').scrollIntoView({behavior:'smooth'});try{await lookup(booking.email,booking.id);$('#loyalty-date').value=booking.confirmedDate||bangkokToday()}catch{message('Could not load membership. Please try again.')}}};
 }

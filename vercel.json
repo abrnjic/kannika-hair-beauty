@@ -43,6 +43,9 @@
     },
     "api/loyalty-notification.mjs": {
       "maxDuration": 60
+    },
+    "api/loyalty-invitation.mjs": {
+      "maxDuration": 60
     }
   }
 }
