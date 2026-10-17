@@ -1,0 +1,2 @@
+import {handleLoyaltyActivation} from '../server/loyalty-activation.mjs';
+export default async function handler(req,res){res.setHeader('Cache-Control','no-store');res.setHeader('Allow','POST');try{const result=await handleLoyaltyActivation({method:req.method,headers:req.headers,body:req.body});return res.status(result.status).json(result.body)}catch{return res.status(503).json({error:'activation_service_unavailable'})}}

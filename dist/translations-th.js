@@ -445,5 +445,11 @@ export default {
   "Refresh membership status ↻": "รีเฟรชสถานะสมาชิก ↻",
   "After you accept, the salon activates your membership.": "หลังคุณยอมรับ ร้านจะเปิดใช้งานสมาชิกให้คุณ",
   "Your membership request has been received. The salon will activate your card.": "ได้รับคำขอสมัครสมาชิกแล้ว ร้านจะเปิดใช้งานบัตรให้คุณ",
-  "Invitation sent. Acceptance and activation will appear in Invitations & members.": "ส่งคำเชิญแล้ว สถานะการยอมรับและการเปิดใช้งานจะแสดงในคำเชิญและสมาชิก"
+  "Invitation sent. Acceptance and activation will appear in Invitations & members.": "ส่งคำเชิญแล้ว สถานะการยอมรับและการเปิดใช้งานจะแสดงในคำเชิญและสมาชิก",
+  "Retry approval email ↗": "ลองส่งอีเมลอนุมัติอีกครั้ง ↗",
+  "Could not confirm activation. Refresh the member and try again.": "ยืนยันการเปิดใช้งานไม่ได้ รีเฟรชข้อมูลสมาชิกแล้วลองอีกครั้ง",
+  "Membership activated and confirmation email sent.": "เปิดใช้งานสมาชิกและส่งอีเมลยืนยันแล้ว",
+  "Membership is active. This approval is too old to resend safely. Contact the client directly.": "สมาชิกใช้งานได้แล้ว การอนุมัตินี้เก่าเกินกว่าจะส่งอีเมลซ้ำได้อย่างปลอดภัย กรุณาติดต่อลูกค้าโดยตรง",
+  "Membership is already active. No new approval was created.": "สมาชิกใช้งานได้อยู่แล้ว ไม่มีการสร้างการอนุมัติใหม่",
+  "Membership is active, but the confirmation email could not be confirmed. Use Retry approval email.": "สมาชิกใช้งานได้แล้ว แต่ยังยืนยันการส่งอีเมลไม่ได้ กรุณากดลองส่งอีเมลอนุมัติอีกครั้ง"
 };

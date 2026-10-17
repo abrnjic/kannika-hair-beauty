@@ -46,6 +46,9 @@
     },
     "api/loyalty-invitation.mjs": {
       "maxDuration": 60
+    },
+    "api/loyalty-activation.mjs": {
+      "maxDuration": 60
     }
   }
 }
