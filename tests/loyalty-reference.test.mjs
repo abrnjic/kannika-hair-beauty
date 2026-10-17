@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {manualEventId} from '../dist/loyalty-policy.js';
+let instance=0;
+const source=(await readFile(new URL('../dist/loyalty-admin.js',import.meta.url),'utf8')).replace(/^import \{([^}]+)\} from '[^']+';$/gm,(_,names)=>`const {${names}}=globalThis.__referenceTest;`);
+async function boot({failFirst=false}={}){
+ const nodes=new Map(),saved=[];const node=id=>{if(!nodes.has(id))nodes.set(id,{value:id==='#loyalty-action'?'visit':'',hidden:false,disabled:false,checked:false,textContent:'',listeners:{},addEventListener(type,callback){this.listeners[type]=callback},replaceChildren(){},append(){},scrollIntoView(){},focus(){},reset(){if(id==='#loyalty-form'){for(const key of ['#loyalty-reference','#loyalty-booking','#loyalty-note','#loyalty-date'])node(key).value='';node('#loyalty-action').value='visit';node('#loyalty-paid').checked=false}}});return nodes.get(id)};
+ globalThis.document={querySelector:node,createElement:()=>node('created-'+nodes.size),createDocumentFragment:()=>({append(){}})};
+ globalThis.fetch=async()=>({ok:true,json:async()=>({notification:'sent'})});
+ const member={name:'Client',email:'client@example.com',membershipStatus:'active',stamps:0};
+ globalThis.__referenceTest={loyaltyRoster:()=>[],membershipPending:data=>data.membershipStatus==='pending',collection:(_db,...parts)=>parts,query:ref=>ref,where:()=>({}),orderBy:()=>({}),limit:()=>({}),doc:()=>({}),getDocs:async ref=>ref.includes('events')?{docs:[]}:{size:1,docs:[{id:'client'}]},getDocFromServer:async()=>({exists:()=>true,data:()=>member}),onSnapshot:()=>()=>{},recordLoyaltyEvent:async(_db,_user,_uid,input)=>{saved.push({...input});if(failFirst&&saved.length===1)throw Error('Interrupted save');return {eventId:'event',duplicate:saved.length>1}},rewardSummary:()=>({stamps:0,discounts:0,gifts:0}),t:text=>text,language:'en',localizeValidation:()=>{},bangkokToday:()=> '2026-10-18'};
+ const module=await import('data:text/javascript;base64,'+Buffer.from(source+'\n// instance '+instance++).toString('base64'));
+ module.setupLoyaltyAdmin({},()=>({uid:'admin',getIdToken:async()=> 'token'}));
+ node('#loyalty-email').value='client@example.com';await node('#loyalty-lookup').listeners.submit({preventDefault(){}});
+ const submit=()=>node('#loyalty-form').listeners.submit({preventDefault(){}});
+ return {node,saved,submit};
+}
+test('automatically populated reference preserves the same visit identity across interrupted saves and repeated submissions',async()=>{const h=await boot({failFirst:true});const reference=h.node('#loyalty-reference').value;assert.ok(reference.startsWith('VISIT-20261018-'));assert.ok(reference.length<=100);h.node('#loyalty-paid').checked=true;await h.submit();await h.submit();await h.submit();assert.equal(h.saved.length,3);assert.ok(h.saved.every(input=>input.reference===reference));const ids=await Promise.all(h.saved.map(input=>manualEventId(input.date,input.reference)));assert.equal(new Set(ids).size,1)});
+test('new visit creates a distinct identity and clears payment confirmation; manual receipt numbers survive ordinary date changes',async()=>{const h=await boot();const first=h.node('#loyalty-reference').value;h.node('#loyalty-date').value='2026-10-17';h.node('#loyalty-date').listeners.change();assert.notEqual(h.node('#loyalty-reference').value,first);h.node('#loyalty-reference').value='RECEIPT-123';h.node('#loyalty-date').value='2026-10-16';h.node('#loyalty-date').listeners.change();assert.equal(h.node('#loyalty-reference').value,'RECEIPT-123');h.node('#loyalty-paid').checked=true;h.node('#loyalty-note').value='Earlier visit';h.node('#loyalty-booking').value='old-booking';h.node('#loyalty-new-visit').listeners.click();assert.ok(h.node('#loyalty-reference').value.startsWith('VISIT-20261018-'));assert.notEqual(h.node('#loyalty-reference').value,first);assert.equal(h.node('#loyalty-paid').checked,false);assert.equal(h.node('#loyalty-note').value,'');assert.equal(h.node('#loyalty-booking').value,'')});

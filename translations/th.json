@@ -476,5 +476,8 @@
   "New memberships become active after salon approval.": "สมาชิกใหม่จะเริ่มใช้งานได้หลังจากทางร้านอนุมัติ",
   "This link has expired or was already used. Request a new card link.": "ลิงก์นี้หมดอายุหรือถูกใช้แล้ว โปรดขอลิงก์เปิดบัตรใหม่",
   "Could not open this link. Please try again or request a new card link.": "เปิดลิงก์นี้ไม่ได้ โปรดลองอีกครั้งหรือขอลิงก์เปิดบัตรใหม่",
-  "Could not complete your request. Please try again.": "ดำเนินการไม่สำเร็จ โปรดลองอีกครั้ง"
+  "Could not complete your request. Please try again.": "ดำเนินการไม่สำเร็จ โปรดลองอีกครั้ง",
+  "A visit reference is generated automatically. Add a stamp only after a completed, paid visit.": "ระบบสร้างรหัสการมาใช้บริการให้อัตโนมัติ เพิ่มแสตมป์หลังจากรับบริการและชำระเงินแล้วเท่านั้น",
+  "Automatically generated. You can replace it with a receipt number.": "สร้างรหัสให้อัตโนมัติ สามารถเปลี่ยนเป็นเลขที่ใบเสร็จได้",
+  "New visit ↗": "การมาใช้บริการครั้งใหม่ ↗"
 }
