@@ -19,6 +19,7 @@ export function setupLoyaltyAdmin(db,getUser){
   const results=await getDocs(query(collection(db,'loyaltyMembers'),where('email','==',email.trim().toLowerCase()),limit(2)));if(current!==generation||getUser()?.uid!==user.uid)return;
   if(results.size!==1){message('Ask the client to join Beauty Club first.');return}memberId=results.docs[0].id;requestId=crypto.randomUUID();await display();
  }
+ $('#add-client-stamp').addEventListener('click',()=>{$('#loyalty-action').value='visit';requestId=crypto.randomUUID();$('#loyalty-section').scrollIntoView({behavior:'smooth'});$('#loyalty-email').focus({preventScroll:true})});
  $('#loyalty-lookup').addEventListener('submit',async e=>{e.preventDefault();if(busy)return;try{await lookup($('#loyalty-email').value)}catch{message('Could not load membership. Please try again.')}});
  $('#loyalty-form').addEventListener('input',()=>{requestId=crypto.randomUUID()});
  $('#loyalty-form').addEventListener('submit',async e=>{e.preventDefault();const user=getUser(),uid=memberId;if(busy||!uid||!user)return;busy=true;$('#loyalty-save').disabled=true;message('');

@@ -396,5 +396,7 @@
   "You do not have permission to change this card.": "คุณไม่มีสิทธิ์เปลี่ยนแปลงบัตรนี้",
   "Discover your Beauty Club card ↗": "ค้นพบบัตร Beauty Club ของคุณ ↗",
   "Beauty Club ↗": "Beauty Club ↗",
-  "Selected treatment or visit note (visible to client)": "ทรีตเมนต์ที่เลือกหรือหมายเหตุการมาใช้บริการ (ลูกค้ามองเห็นได้)"
+  "Selected treatment or visit note (visible to client)": "ทรีตเมนต์ที่เลือกหรือหมายเหตุการมาใช้บริการ (ลูกค้ามองเห็นได้)",
+  "Add client stamp": "เพิ่มแสตมป์ให้ลูกค้า",
+  "Add a stamp after a completed, paid visit. Find the client by email to get started.": "เพิ่มแสตมป์หลังรับบริการและชำระเงินเรียบร้อยแล้ว เริ่มต้นด้วยการค้นหาลูกค้าจากอีเมล"
 }
