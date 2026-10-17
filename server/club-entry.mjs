@@ -11,12 +11,13 @@ export async function handleClubEntry(request,{env=process.env,now=()=>new Date(
  if(!env.FIREBASE_SERVICE_ACCOUNT_JSON)return reply(503,{error:'access_not_configured'});
  let input;
  try{input=typeof request.body==='string'?JSON.parse(request.body):request.body;if(JSON.stringify(input).length>1000||!['preview','open'].includes(input.action)||!/^[-a-f0-9]{36}$/.test(input.attemptId)||!/^[a-f0-9]{64}$/.test(input.token))throw Error()}catch{return reply(400,{error:'invalid_request'})}
+ let phase='initialise';
  try{
   const date=now(),time=date.getTime(),{auth,db}=await getServices(env),ref=db.collection('clubAccessTokens').doc(cardTokenId(input.token));
-  const data=(await ref.get()).data();valid(data,input.attemptId,time);
+  phase='read_link';const data=(await ref.get()).data();valid(data,input.attemptId,time);
   if(input.action==='preview'){
-   const user=await findUser(auth,data.email);if(user?.disabled)throw failure(403);
-   const member=user?(await db.collection('loyaltyMembers').doc(user.uid).get()).data():null;
+   phase='read_user';const user=await findUser(auth,data.email);if(user?.disabled)throw failure(403);
+   phase='read_member';const member=user?(await db.collection('loyaltyMembers').doc(user.uid).get()).data():null;
    // Preview never signs in, creates a user, records consent or consumes the link.
    return reply(200,{email:data.email,name:member?.name||data.name||'',language:data.language,enrolled:!!member});
   }
@@ -41,5 +42,5 @@ export async function handleClubEntry(request,{env=process.env,now=()=>new Date(
    tx.update(ref,{usedAt:date,sessionToken,receiptExpiresAt:new Date(time+300000)});return sessionToken;
   });
   return reply(200,{sessionToken:result});
- }catch(error){return reply(error.status||503,{error:error.status?'link_unavailable':'access_unavailable'})}
+ }catch(error){if(!error.status)console.warn('club_entry_unavailable',{phase,code:String(error.code||error.name||'unknown').slice(0,80)});return reply(error.status||503,{error:error.status?'link_unavailable':'access_unavailable'})}
 }
