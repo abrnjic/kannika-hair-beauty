@@ -1,3 +1,4 @@
+import {salonEmail} from './beauty-club-email.mjs';
 import {validateBooking} from '../dist/booking-validation.js';
 import {t} from '../dist/i18n.js';
 const project='kannika-4f9b6';
@@ -34,7 +35,7 @@ export function receiptEmail(data,id,from) {
  const rows=[[c.service,t(data.service,{},lang)],[c.visit,`${date} · ${t(data.time,{},lang)}`],[c.reference,id]];
  return {from,to:[data.email],reply_to:recipient,subject:`Kannika — ${c.title}`,
   text:['KANNIKA — '+c.title,'',data.name,c.message,'',...rows.map(([label,value])=>`${label}: ${value}`),'',c.zone,c.contact,recipient,'+66 81 727 4874'].join('\n'),
-  html:`<!doctype html><html lang="${lang}"><body style="margin:0;background:#151715;color:#eeeade;font:16px/1.7 Arial,sans-serif"><main style="max-width:620px;padding:32px;margin:auto"><h1 style="color:#cbb17c">KANNIKA</h1><h2>${c.title}</h2><p>${escape(data.name)}</p><p>${c.message}</p><table style="width:100%;border-collapse:collapse">${rows.map(([label,value])=>`<tr><th style="text-align:left;vertical-align:top;padding:12px 8px;border-bottom:1px solid #555">${label}</th><td style="padding:12px 8px;border-bottom:1px solid #555;overflow-wrap:anywhere">${escape(value)}</td></tr>`).join('')}</table><p>${c.zone}</p><p>${c.contact}<br><a style="color:#cbb17c" href="mailto:${recipient}">${recipient}</a><br><a style="color:#cbb17c" href="tel:+66817274874">+66 81 727 4874</a></p></main></body></html>`};
+  html:salonEmail({language:lang,title:c.title,eyebrow:lang==='th'?'KANNIKA · คำขอนัดหมาย':'KANNIKA · APPOINTMENT REQUEST',paragraphs:[data.name,c.message],details:rows,footnote:c.zone+' · '+c.contact})};
 }
 export async function handleBooking(request,{fetchImpl=fetch,env=process.env,now=()=>new Date()}={}) {
  if(request.method!=='POST')return reply(405,{error:'method_not_allowed'});

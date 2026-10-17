@@ -1,10 +1,10 @@
+import {salonEmail} from './beauty-club-email.mjs';
 import {validateDecision} from '../dist/admin-policy.js';
 import {t} from '../dist/i18n.js';
 import {recipient} from './booking-notifications.mjs';
 import salonLocation from '../salon-location.json' with {type:'json'};
 const project='kannika-4f9b6';
 const root=`https://firestore.googleapis.com/v1/projects/${project}/databases/(default)/documents`;
-const escape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const decode=document=>Object.fromEntries(Object.entries(document.fields??{}).map(([key,value])=>[key,value.stringValue??value.timestampValue??value.booleanValue]));
 const reply=(status,body)=>({status,body});
 const salonAddress=salonLocation.address;
@@ -26,10 +26,10 @@ export function statusEmail(data,id,from){
  const message=c[data.status+'Body'];
  const confirmed=data.status==='confirmed';
  const directionsText=confirmed?['',c.directions,directions.address,`${c.googleMaps}: ${directions.google}`,`${c.appleMaps}: ${directions.apple}`]:[];
- const directionsHtml=confirmed?`<section style="margin:28px 0;padding-top:12px;border-top:1px solid #555"><h3 style="color:#cbb17c">${c.directions}</h3><p>${escape(directions.address)}</p><a href="${escape(directions.google)}" style="display:inline-block;margin:0 8px 12px 0;padding:12px 18px;background:#cbb17c;color:#151715;text-decoration:none;border-radius:4px">${c.googleMaps} ↗</a><a href="${escape(directions.apple)}" style="display:inline-block;margin:0 0 12px;padding:12px 18px;border:1px solid #cbb17c;color:#cbb17c;text-decoration:none;border-radius:4px">${c.appleMaps} ↗</a></section>`:'';
+
  return {from,to:[data.email],reply_to:recipient,subject:`Kannika — ${c[data.status]}`,
  text:[`KANNIKA — ${c[data.status]}`,'',data.name,message,'',...rows.map(([label,value])=>`${label}: ${value}`),'',c.zone,...directionsText,'',c.contact,recipient,'+66 81 727 4874'].join('\n'),
- html:`<!doctype html><html lang="${lang}"><body style="margin:0;background:#151715;color:#eeeade;font:16px/1.7 Arial,sans-serif"><main style="max-width:620px;padding:32px;margin:auto"><h1 style="color:#cbb17c">KANNIKA</h1><h2>${c[data.status]}</h2><p>${escape(data.name)}</p><p>${message}</p><table style="width:100%;border-collapse:collapse">${rows.map(([label,value])=>`<tr><th style="text-align:left;vertical-align:top;padding:12px 8px;border-bottom:1px solid #555">${label}</th><td style="padding:12px 8px;border-bottom:1px solid #555;overflow-wrap:anywhere">${escape(value)}</td></tr>`).join('')}</table><p>${c.zone}</p>${directionsHtml}<p>${c.contact}<br><a style="color:#cbb17c" href="mailto:${recipient}">${recipient}</a><br><a style="color:#cbb17c" href="tel:+66817274874">+66 81 727 4874</a></p></main></body></html>`};
+ html:salonEmail({language:lang,title:c[data.status],eyebrow:lang==='th'?'KANNIKA · การนัดหมายของคุณ':'KANNIKA · YOUR APPOINTMENT',paragraphs:[data.name,message],details:rows,footnote:c.zone+' · '+c.contact,directions:confirmed?{title:c.directions,address:directions.address,links:[{label:c.googleMaps,url:directions.google},{label:c.appleMaps,url:directions.apple}]}:null})};
 }
 export async function handleStatus(request,{fetchImpl=fetch,env=process.env,now=()=>new Date()}={}){
  if(request.method!=='POST')return reply(405,{error:'method_not_allowed'});
