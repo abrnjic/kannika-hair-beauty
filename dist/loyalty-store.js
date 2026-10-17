@@ -4,7 +4,7 @@ import {bangkokToday} from './booking-validation.js';
 export async function enrolMember(db,user,input){
  if(!user?.emailVerified||!user.email)throw Error('Verify your email before joining.');
  const profile=memberDetails(input),ref=doc(db,'loyaltyMembers',user.uid);
- await runTransaction(db,async tx=>{const current=await tx.get(ref);if(current.exists())return;tx.set(ref,{...profile,email:user.email.toLowerCase(),stamps:0,discountsUsed:0,giftsUsed:0,createdAt:serverTimestamp()})});
+ await runTransaction(db,async tx=>{const current=await tx.get(ref);if(current.exists())return;tx.set(ref,{...profile,email:user.email.toLowerCase(),membershipStatus:'pending',stamps:0,discountsUsed:0,giftsUsed:0,createdAt:serverTimestamp()})});
 }
 export async function recordLoyaltyEvent(db,user,memberId,input){
  if(!user)throw Error('Administrator access required.');
@@ -23,7 +23,7 @@ export async function recordLoyaltyEvent(db,user,memberId,input){
   const [member,existing]=await Promise.all([tx.get(memberRef),tx.get(eventRef)]);
   if(!member.exists())throw Error('Ask the client to join Beauty Club first.');
   if(existing.exists()){const e=existing.data();if(e.type!==type||e.reference!==reference||e.date!==date)throw Error('This visit has already earned a stamp.');return {eventId,duplicate:true}}
-  const data=member.data(),summary=rewardSummary(data);
+  const data=member.data();if(data.membershipStatus==='pending')throw Error('Activate this membership before adding stamps or using rewards.');const summary=rewardSummary(data);
   if(type==='visit'&&input.completedPaid!==true)throw Error('Confirm the service is completed and paid.');
   if(bookingId){const booking=await tx.get(doc(db,'bookings',bookingId));const b=booking.data();if(!b||b.status!=='confirmed'||b.email.toLowerCase()!==data.email||b.confirmedDate>bangkokToday())throw Error('Only a completed, confirmed booking for this client can earn a stamp.');}
   if(type==='discount'&&!summary.discounts||type==='gift'&&!summary.gifts)throw Error('This reward is not available yet.');
@@ -32,4 +32,10 @@ export async function recordLoyaltyEvent(db,user,memberId,input){
   tx.update(memberRef,{...balance,lastEventId:eventId,updatedAt:serverTimestamp(),updatedBy:user.uid});
   return {eventId,duplicate:false};
  });
+}
+
+export async function activateMembership(db,user,memberId){
+ if(!user)throw Error('Administrator access required.');
+ const ref=doc(db,'loyaltyMembers',memberId);
+ return runTransaction(db,async tx=>{const snapshot=await tx.get(ref);if(!snapshot.exists()||snapshot.data().consent!==true)throw Error('The client must accept the programme rules first.');if(snapshot.data().membershipStatus!=='pending')return {alreadyActive:true};tx.update(ref,{membershipStatus:'active',approvedAt:serverTimestamp(),approvedBy:user.uid});return {alreadyActive:false}});
 }

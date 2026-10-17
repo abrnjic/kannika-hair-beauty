@@ -108,7 +108,7 @@ onAuthStateChanged(auth,async user=>{
   const salonAccount=user.email===salonEmail;
   const role=salonAccount?null:await getDocFromServer(doc(db,'admins',user.uid));if(currentSession!==session)return;setError('#auth-error');
   if(!salonAccount&&(!role?.exists()||role.data().role!=='owner')){$('#access-pending').hidden=false;$('#pending-email').textContent=user.email||'';$('#pending-uid').value=user.uid;return}
-  administrator=user;$('#login-panel').hidden=true;$('#workspace').hidden=false;$('#admin-email').textContent=user.email||'';await loadRequests();
+  administrator=user;$('#login-panel').hidden=true;$('#workspace').hidden=false;$('#admin-email').textContent=user.email||'';loyaltyAdmin.start();await loadRequests();
  }catch(error){if(currentSession===session)setError('#auth-error',error.message===t('Sign in using an authorised Google account.')?error.message:t('Could not verify administrator access. Check your connection, then sign out and try again.'))}
 });
 $('#copy-uid').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('#pending-uid').value);toast(t('User ID copied'))}catch{$('#pending-uid').select();toast(t('Select and copy the user ID above'))}});

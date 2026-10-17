@@ -47,6 +47,24 @@ service cloud.firestore {
           || (request.resource.data.status != 'confirmed' && request.resource.data.confirmedDate == '' && request.resource.data.confirmedTime == ''));
       allow delete: if false;
     }
+    match /loyaltyInvitations/{invitationId} {
+      function validInvitation(d) {
+        return invitationId.matches('^[a-f0-9]{64}$')
+          && d.keys().hasOnly(['name','email','language','deliveryStatus','createdAt','createdBy','updatedAt','updatedBy','lastSentAt'])
+          && d.name is string && d.name.size() > 0 && d.name.size() <= 100
+          && d.email is string && d.email.size() <= 254 && d.email == d.email.lower()
+          && d.language in ['en','th'] && d.deliveryStatus in ['pending','sent']
+          && d.updatedAt == request.time && d.updatedBy == request.auth.uid;
+      }
+      allow get, list: if isAdmin();
+      allow create: if isAdmin() && validInvitation(request.resource.data)
+        && request.resource.data.createdAt == request.time && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.deliveryStatus == 'pending' && !('lastSentAt' in request.resource.data);
+      allow update: if isAdmin() && validInvitation(request.resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','language','deliveryStatus','updatedAt','updatedBy','lastSentAt'])
+        && (!('lastSentAt' in request.resource.data) || request.resource.data.lastSentAt == resource.data.get('lastSentAt',null) || request.resource.data.lastSentAt == request.time);
+      allow delete: if false;
+    }
     match /loyaltyMembers/{memberId} {
       function verifiedOwner() {
         return request.auth != null && request.auth.uid == memberId
@@ -65,22 +83,27 @@ service cloud.firestore {
       allow get: if isAdmin() || verifiedOwner();
       allow list: if isAdmin();
       allow create: if verifiedOwner()
-        && request.resource.data.keys().hasOnly(['name','email','language','consent','marketingConsent','termsVersion','stamps','discountsUsed','giftsUsed','createdAt'])
-        && request.resource.data.keys().hasAll(['name','email','language','consent','marketingConsent','termsVersion','stamps','discountsUsed','giftsUsed','createdAt'])
+        && request.resource.data.keys().hasOnly(['name','email','language','consent','marketingConsent','termsVersion','stamps','discountsUsed','giftsUsed','createdAt','membershipStatus'])
+        && request.resource.data.keys().hasAll(['name','email','language','consent','marketingConsent','termsVersion','stamps','discountsUsed','giftsUsed','createdAt','membershipStatus'])
         && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 100
         && request.resource.data.email == request.auth.token.email.lower()
         && request.resource.data.language in ['en','th']
         && request.resource.data.consent == true && request.resource.data.marketingConsent is bool
-        && request.resource.data.termsVersion == '1'
+        && request.resource.data.termsVersion == '1' && request.resource.data.membershipStatus == 'pending'
         && request.resource.data.stamps == 0 && request.resource.data.discountsUsed == 0 && request.resource.data.giftsUsed == 0
         && request.resource.data.createdAt == request.time;
-      allow update: if isAdmin()
+      allow update: if isAdmin() && resource.data.get('membershipStatus','active') == 'active'
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stamps','discountsUsed','giftsUsed','lastEventId','updatedAt','updatedBy'])
         && balances(request.resource.data)
         && request.resource.data.updatedAt == request.time && request.resource.data.updatedBy == request.auth.uid
         && request.resource.data.lastEventId is string
         && !exists(/databases/$(database)/documents/loyaltyMembers/$(memberId)/events/$(request.resource.data.lastEventId))
         && eventMatches(request.resource.data);
+      allow update: if isAdmin() && resource.data.get('membershipStatus','active') == 'pending'
+        && resource.data.consent == true
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['membershipStatus','approvedAt','approvedBy'])
+        && request.resource.data.membershipStatus == 'active'
+        && request.resource.data.approvedAt == request.time && request.resource.data.approvedBy == request.auth.uid;
       allow delete: if false;
       match /events/{eventId} {
         function memberBefore() { return get(/databases/$(database)/documents/loyaltyMembers/$(memberId)).data; }
@@ -88,7 +111,7 @@ service cloud.firestore {
           let e = request.resource.data;
           let m = memberBefore();
           let after = getAfter(/databases/$(database)/documents/loyaltyMembers/$(memberId)).data;
-          return e.keys().hasOnly(['type','date','reference','note','bookingId','completedPaid','stamps','discountsUsed','giftsUsed','language','createdAt','createdBy'])
+          return m.get('membershipStatus','active') == 'active' && e.keys().hasOnly(['type','date','reference','note','bookingId','completedPaid','stamps','discountsUsed','giftsUsed','language','createdAt','createdBy'])
             && e.keys().hasAll(['type','date','reference','note','bookingId','completedPaid','stamps','discountsUsed','giftsUsed','language','createdAt','createdBy'])
             && e.type in ['visit','discount','gift'] && e.createdBy == request.auth.uid && e.createdAt == request.time
             && e.date is string && e.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')

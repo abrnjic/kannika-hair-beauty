@@ -7,7 +7,7 @@ export function invitationEmail(client,from){
  const title=th?'ขอเชิญเข้าร่วม Kannika Beauty Club':'You’re invited to Kannika Beauty Club';
  const greeting=th?`สวัสดี ${client.name}`:`Hello ${client.name},`;
  const intro=th?'สะสมแสตมป์ 1 ดวงต่อการรับบริการและชำระเงิน 1 ครั้ง ครบ 5 ครั้ง รับส่วนลด 10% สำหรับครั้งถัดไป ครบ 10 ครั้ง รับทรีตเมนต์ฟรีที่เลือกกับทางร้าน':'Earn one stamp for each completed, paid visit. At 5 visits, enjoy 10% off your next visit. At 10 visits, enjoy a complimentary treatment selected with the salon.';
- const instructions=th?'เปิดลิงก์ด้านล่างและลงชื่อเข้าใช้ด้วยอีเมลที่ได้รับคำเชิญนี้ผ่าน Google หรือลิงก์ทางอีเมล จากนั้นกรอกชื่อและยอมรับกติกาเพื่อเข้าร่วม':'Open the link below and sign in with the email that received this invitation, using Google or an email sign-in link. Then enter your name and accept the programme rules to join.';
+ const instructions=th?'เปิดลิงก์ด้านล่างและลงชื่อเข้าใช้ด้วยอีเมลที่ได้รับคำเชิญนี้ผ่าน Google หรือลิงก์ทางอีเมล จากนั้นกรอกชื่อและยอมรับกติกา ร้านจะตรวจสอบคำขอและเปิดใช้งานสมาชิกให้คุณ':'Open the link below and sign in with the email that received this invitation, using Google or an email sign-in link. Then enter your name and accept the programme rules. The salon will review your request and activate your membership.';
  const privacy=th?'คำเชิญนี้ยังไม่ได้สมัครสมาชิกให้คุณ การเข้าร่วมเป็นทางเลือก และการรับข่าวสารโปรโมชั่นต้องให้ความยินยอมแยกต่างหาก หากคุณไม่ได้ขอคำเชิญนี้ สามารถละเว้นอีเมลนี้ได้':'This invitation has not enrolled you. Joining is optional, and promotional messages require separate consent. If you did not request this invitation, you can ignore this email.';
  const button=th?'เข้าร่วม Beauty Club':'Join Beauty Club';
  return {from,to:[client.email],reply_to:recipient,subject:'Kannika — '+title,text:[greeting,title,intro,instructions,button+': '+url,privacy,recipient].join('\n\n'),html:beautyClubEmail({language:client.language,title,paragraphs:[greeting,intro,instructions],url,button,footnote:privacy})};
@@ -28,9 +28,21 @@ export async function handleLoyaltyInvitation(request,{fetchImpl=fetch,env=proce
   // including the salon email allowlist. Empty results still require admin access.
   const access=await call(`${root}:runQuery`,{method:'POST',headers:{Authorization:authorization,'Content-Type':'application/json'},body:JSON.stringify({structuredQuery:{from:[{collectionId:'loyaltyMembers'}],limit:1}})});
   if(!access.ok)return reply([401,403].includes(access.status)?403:503,{error:'administrator_required'});
+  const invitationId=createHash('sha256').update(client.email).digest('hex'),invitationPath=`projects/${project}/databases/(default)/documents/loyaltyInvitations/${invitationId}`;
+  const headers={Authorization:authorization,'Content-Type':'application/json'};
+  const previous=await call(`${root}/loyaltyInvitations/${invitationId}`,{headers});
+  if(!previous.ok&&previous.status!==404)return reply(503,{error:'invitation_tracking_unavailable'});
+  const stored=previous.ok?await previous.json():null;
+  const fields={name:{stringValue:client.name},language:{stringValue:client.language},deliveryStatus:{stringValue:stored?.fields?.lastSentAt?'sent':'pending'},updatedBy:{stringValue:claims.sub}};
+  if(!stored){fields.email={stringValue:client.email};fields.createdBy={stringValue:claims.sub}}
+  const write={update:{name:invitationPath,fields},updateTransforms:[{fieldPath:'updatedAt',setToServerValue:'REQUEST_TIME'},...(!stored?[{fieldPath:'createdAt',setToServerValue:'REQUEST_TIME'}]:[])],currentDocument:stored?{updateTime:stored.updateTime}:{exists:false}};
+  if(stored)write.updateMask={fieldPaths:Object.keys(fields)};
+  const recorded=await call(`${root}:commit`,{method:'POST',headers,body:JSON.stringify({writes:[write]})});
+  if(!recorded.ok)return reply(503,{error:'invitation_tracking_unavailable'});
+  async function markSent(){const saved=await call(`${root}:commit`,{method:'POST',headers,body:JSON.stringify({writes:[{update:{name:invitationPath,fields:{deliveryStatus:{stringValue:'sent'},updatedBy:{stringValue:claims.sub}}},updateMask:{fieldPaths:['deliveryStatus','updatedBy']},updateTransforms:[{fieldPath:'lastSentAt',setToServerValue:'REQUEST_TIME'},{fieldPath:'updatedAt',setToServerValue:'REQUEST_TIME'}],currentDocument:{exists:true}}]})});return saved.ok}
   const email=invitationEmail(client,env.BOOKING_FROM_EMAIL||'Kannika <appointments@kannikabeauty.com>');
-  const key='kannika-invite/'+now().toISOString().slice(0,10)+'/'+createHash('sha256').update(JSON.stringify(client)).digest('hex');
-  for(let attempt=0;attempt<3;attempt++){if(attempt)await new Promise(r=>setTimeout(r,attempt*500));try{const sent=await call('https://api.resend.com/emails',{method:'POST',headers:{Authorization:'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json','Idempotency-Key':key},body:JSON.stringify(email)});if(sent.ok&&(await sent.json()).id)return reply(200,{notification:'sent'});if(sent.status!==429&&sent.status<500)break}catch{}}
+  const key='kannika-invite/'+now().toISOString().slice(0,10)+'/'+createHash('sha256').update(JSON.stringify({client,template:'approval-v1'})).digest('hex');
+  for(let attempt=0;attempt<3;attempt++){if(attempt)await new Promise(r=>setTimeout(r,attempt*500));try{const sent=await call('https://api.resend.com/emails',{method:'POST',headers:{Authorization:'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json','Idempotency-Key':key},body:JSON.stringify(email)});if(sent.ok&&(await sent.json()).id){if(await markSent())return reply(200,{notification:'sent',invitationId});return reply(202,{notification:'pending',invitationId})}if(sent.status!==429&&sent.status<500)break}catch{}}
   return reply(202,{notification:'pending'});
  }catch{return reply(503,{error:'invitation_service_unavailable'})}
 }
