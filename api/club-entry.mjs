@@ -1,0 +1,2 @@
+import {handleClubEntry} from '../server/club-entry.mjs';
+export default async function handler(req,res){res.setHeader('Cache-Control','no-store');res.setHeader('Allow','POST');res.setHeader('Referrer-Policy','no-referrer');try{const result=await handleClubEntry({method:req.method,headers:req.headers,body:req.body});return res.status(result.status).json(result.body)}catch{return res.status(503).json({error:'access_unavailable'})}}

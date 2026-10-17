@@ -1,14 +1,15 @@
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
-import {initializeAuth,indexedDBLocalPersistence,browserLocalPersistence,browserSessionPersistence,inMemoryPersistence,browserPopupRedirectResolver,GoogleAuthProvider,signInWithRedirect,signInWithPopup,getRedirectResult,sendSignInLinkToEmail,isSignInWithEmailLink,signInWithEmailLink,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
+import {initializeAuth,indexedDBLocalPersistence,browserLocalPersistence,browserSessionPersistence,inMemoryPersistence,browserPopupRedirectResolver,signInWithCustomToken,getRedirectResult,signInAnonymously,isSignInWithEmailLink,signInWithEmailLink,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
 import {getFirestore,doc,getDocFromServer,collection,getDocs,query,orderBy,limit} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
 import {firebaseConfig} from './firebase-config.js';
 import {t,language,locale,localizeValidation} from './i18n.js';
 import {enrolMember} from './loyalty-store.js';
+import {setupCardEntry} from './club-entry.js';
 import {rewardSummary} from './loyalty-policy.js';
 const $=s=>document.querySelector(s),production=location.hostname==='kannika-hair-beauty.vercel.app';
 const app=initializeApp({...firebaseConfig,...(production?{authDomain:location.hostname}:{})},'kannika-club');
 const auth=initializeAuth(app,{persistence:[indexedDBLocalPersistence,browserLocalPersistence,browserSessionPersistence,inMemoryPersistence],popupRedirectResolver:browserPopupRedirectResolver}),db=getFirestore(app);auth.languageCode=language;
-let busy=false,session=0;let emailLink=isSignInWithEmailLink(auth,location.href)?location.href:null;let processingLink=!!emailLink;
+let busy=false,session=0;let emailLink=isSignInWithEmailLink(auth,location.href)?location.href:null;const cardToken=new URL(location.href).hash.slice(1).startsWith('access=')?new URLSearchParams(new URL(location.href).hash.slice(1)).get('access'):null;let processingLink=!!emailLink||!!cardToken;
 const pendingEmailStores=[()=>localStorage,()=>sessionStorage];
 function savedEmail(){for(const getStore of pendingEmailStores){try{const email=getStore().getItem('kannikaClubEmail');if(email)return email}catch{}}return ''}
 function rememberEmail(email){for(const getStore of pendingEmailStores){try{getStore().setItem('kannikaClubEmail',email)}catch{}}}
@@ -32,7 +33,7 @@ async function loadCard(user){
  const list=document.createDocumentFragment();for(const item of events.docs){const e=item.data(),li=document.createElement('li');li.textContent=`${e.date} · ${t(e.type==='visit'?'Visit stamp added':e.type==='discount'?'10% reward used':'Complimentary treatment used')}${e.note?' · '+e.note:''}`;list.append(li)}if(events.empty){const li=document.createElement('li');li.textContent=t('Your first beautiful moment is waiting.');list.append(li)}$('#activity').replaceChildren(list);
 }
 const redirectResult=getRedirectResult(auth).catch(()=>{message('Sign-in could not finish. Please try again.')});
-onAuthStateChanged(auth,user=>{if(!processingLink)loadCard(user).catch(()=>accessError('Could not load your card. Please refresh and try again.'))});
+onAuthStateChanged(auth,user=>{if(!processingLink)loadCard(user?.isAnonymous?null:user).catch(()=>accessError('Could not load your card. Please refresh and try again.'))});
 function emailEntry(){
  $('#club-loading').hidden=true;$('#access-panel').hidden=false;
  $('#link-form button').textContent=t(emailLink?'Open my card ↗':'Email my sign-in link ↗');
@@ -42,7 +43,7 @@ async function completeEmail(email){
  controls(true);processingLink=true;message('Opening your card…');let signedIn=null;
  try{const result=await signInWithEmailLink(auth,email,emailLink);signedIn=result.user;clearSavedEmail();clearLink();processingLink=false;message('')}
  catch(error){
-  if(['auth/invalid-action-code','auth/expired-action-code'].includes(error.code)){clearLink();clearSavedEmail();message('This link has expired or was already used. Open with Google or request a new link.')}
+  if(['auth/invalid-action-code','auth/expired-action-code'].includes(error.code)){clearLink();clearSavedEmail();message('This link has expired or was already used. Request a new card link.')}
   else message('Enter the email that received this link. We will open your card.');
   processingLink=!!emailLink;emailEntry();
  }finally{controls(false);$('#club-loading').hidden=true}
@@ -50,15 +51,17 @@ async function completeEmail(email){
 }
 $('#link-form').addEventListener('submit',async e=>{
  e.preventDefault();if(busy)return;const email=$('#club-email').value.trim();if(emailLink){await completeEmail(email);return}
- controls(true);message('');try{await sendSignInLinkToEmail(auth,email,{url:'https://kannika-hair-beauty.vercel.app'+(language==='th'?'/th/club':'/club'),handleCodeInApp:true});rememberEmail(email);message('Check your inbox and tap the link. Your card opens automatically on this browser.')}
- catch(error){message(error.code==='auth/too-many-requests'||error.code==='auth/quota-exceeded'?'Email sign-in is temporarily unavailable. Try Google sign-in or contact the salon.':'Could not sign in. Request a new link and use the same email.')}finally{controls(false)}
-});
-$('#club-google').addEventListener('click',async()=>{
- if(busy)return;controls(true);processingLink=true;message('');
- try{const provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account',hl:language});let result;try{result=await signInWithPopup(auth,provider)}catch(error){if(error.code!=='auth/popup-blocked')throw error;await redirectResult;await signInWithRedirect(auth,provider);return}clearSavedEmail();if(emailLink)clearLink();processingLink=false;await loadCard(result.user)}
- catch{processingLink=!!emailLink;accessError('Sign-in could not finish. Please try again.')}finally{controls(false)}
+ controls(true);message('');try{
+  const user=auth.currentUser||(await signInAnonymously(auth)).user;
+  const response=await fetch('/api/club-access',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+await user.getIdToken()},body:JSON.stringify({email,language})});
+  if(!response.ok)throw Object.assign(Error('Email not confirmed'),{status:response.status});
+  const result=await response.json();if(result.notification!=='sent')throw Error('Email not confirmed');
+  rememberEmail(email);message('Open the email from Kannika and tap Open my card. Check Junk if it does not arrive.');
+ }catch(error){message(error.status===429?'Please wait before requesting another link. If you already received one, use that email.':'We could not confirm sending your link. Please try again or contact the salon.')}finally{controls(false)}
 });
 $('#join-form').addEventListener('submit',async e=>{e.preventDefault();if(busy||!auth.currentUser)return;controls(true);try{const data=new FormData(e.currentTarget);await enrolMember(db,auth.currentUser,{name:data.get('name'),consent:data.has('consent'),marketingConsent:data.has('marketingConsent'),language});message('Your membership request has been received. The salon will activate your card.');await loadCard(auth.currentUser)}catch(error){message(t(error.message)||'Could not save your membership. Please try again.')}finally{controls(false)}});
 $('#refresh-membership').addEventListener('click',()=>loadCard(auth.currentUser).catch(()=>message('Could not load your card. Please refresh and try again.')));$('#refresh-card').addEventListener('click',()=>loadCard(auth.currentUser).catch(()=>message('Could not load your card. Please refresh and try again.')));$('#club-sign-out').addEventListener('click',async()=>{clearSavedEmail();await signOut(auth);message('')});
 for(const id of ['#link-form','#join-form'])localizeValidation($(id));
 if(emailLink){const email=savedEmail();if(email)await completeEmail(email);else emailEntry()}
+
+if(cardToken)await setupCardEntry({token:cardToken,signIn:token=>signInWithCustomToken(auth,token),accept:(user,profile)=>enrolMember(db,user,profile),showCard:loadCard,onDone:()=>{processingLink=false;clearSavedEmail()},message,t});

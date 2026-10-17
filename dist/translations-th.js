@@ -465,5 +465,16 @@ export default {
   "Open your card to see your stamps and rewards.": "เปิดบัตรเพื่อดูแสตมป์และสิทธิพิเศษของคุณ",
   "Use any email address. No Google account needed.": "ใช้อีเมลใดก็ได้ ไม่จำเป็นต้องมีบัญชี Google",
   "Or, if you prefer": "หรือเลือกเข้าสู่ระบบด้วย",
-  "Use the same email you used to join.": "ใช้อีเมลเดียวกับที่ใช้สมัครสมาชิก"
+  "Use the same email you used to join.": "ใช้อีเมลเดียวกับที่ใช้สมัครสมาชิก",
+  "Open the email from Kannika and tap Open my card. Check Junk if it does not arrive.": "เปิดอีเมลจาก Kannika แล้วกดเปิดบัตรของฉัน หากไม่พบอีเมล โปรดตรวจสอบโฟลเดอร์จดหมายขยะ",
+  "Please wait before requesting another link. If you already received one, use that email.": "โปรดรอสักครู่ก่อนขอลิงก์ใหม่ หากได้รับอีเมลแล้ว ให้ใช้ลิงก์ในอีเมลนั้น",
+  "We could not confirm sending your link. Please try again or contact the salon.": "ยังยืนยันการส่งลิงก์ไม่ได้ โปรดลองอีกครั้งหรือติดต่อทางร้าน",
+  "Invitation could not be confirmed. Check the address and retry; duplicate invitations are prevented for a short time.": "ยังยืนยันการส่งคำเชิญไม่ได้ โปรดตรวจสอบอีเมลแล้วลองอีกครั้ง ระบบป้องกันการส่งซ้ำในช่วงเวลาสั้น ๆ",
+  "The same simple access for every email address.": "ทุกอีเมลเข้าถึงบัตรได้ง่ายด้วยวิธีเดียวกัน",
+  "Accept & open my card ↗": "ยอมรับและเปิดบัตรของฉัน ↗",
+  "By tapping Accept & open my card, you agree to the Beauty Club rules and membership emails. Promotional emails are not included.": "เมื่อกดยอมรับและเปิดบัตรของฉัน คุณยอมรับกติกา Beauty Club และอีเมลเกี่ยวกับสมาชิก โดยไม่รวมอีเมลโปรโมชั่น",
+  "New memberships become active after salon approval.": "สมาชิกใหม่จะเริ่มใช้งานได้หลังจากทางร้านอนุมัติ",
+  "This link has expired or was already used. Request a new card link.": "ลิงก์นี้หมดอายุหรือถูกใช้แล้ว โปรดขอลิงก์เปิดบัตรใหม่",
+  "Could not open this link. Please try again or request a new card link.": "เปิดลิงก์นี้ไม่ได้ โปรดลองอีกครั้งหรือขอลิงก์เปิดบัตรใหม่",
+  "Could not complete your request. Please try again.": "ดำเนินการไม่สำเร็จ โปรดลองอีกครั้ง"
 };

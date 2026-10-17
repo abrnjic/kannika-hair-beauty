@@ -1,0 +1,2 @@
+import {handleClubAccess} from '../server/club-access.mjs';
+export default async function handler(req,res){res.setHeader('Cache-Control','no-store');res.setHeader('Allow','POST');try{const result=await handleClubAccess({method:req.method,headers:req.headers,body:req.body,ip:req.headers['x-real-ip']||req.socket?.remoteAddress});return res.status(result.status).json(result.body)}catch{return res.status(503).json({error:'access_unavailable'})}}

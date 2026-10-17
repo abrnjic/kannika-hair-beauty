@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "buildCommand": "",
-  "installCommand": "",
+  "installCommand": "npm ci --omit=dev --ignore-scripts",
   "outputDirectory": "dist",
   "rewrites": [
     {
@@ -48,6 +48,12 @@
       "maxDuration": 60
     },
     "api/loyalty-activation.mjs": {
+      "maxDuration": 60
+    },
+    "api/club-access.mjs": {
+      "maxDuration": 60
+    },
+    "api/club-entry.mjs": {
       "maxDuration": 60
     }
   }
