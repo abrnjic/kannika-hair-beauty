@@ -37,7 +37,7 @@ The browser loads Firebase Auth from Google's CDN only when a live request is su
 
 Requests reuse the same ID for retries during the page session to avoid duplicate writes. A storage failure keeps the form data. If storage succeeds but email fails, the UI explicitly shows that the request is saved and offers an idempotent notification retry plus the salon phone number.
 
-New booking notifications are sent to kannika54932@gmail.com through Resend; clients receive an immediate awaiting-review receipt, then status emails when an administrator saves a decision. The salon contact email is kannika54932@gmail.com. The salon address is 20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ Bang Lamung District, Chon Buri 20150. The salon telephone is +66 81 727 4874. Opening hours are 09:00–22:00, Pattaya time. The owner has not specified opening days. Social profiles, prices and data retention policy still need to be supplied.
+New booking notifications are sent to kannika54932@gmail.com through Resend; clients receive an immediate awaiting-review receipt, then status emails when an administrator saves a decision. The salon contact email is kannika54932@gmail.com. The salon address is 20/115 ม.10 พัทยาใต้ซอย 16 เมืองพัทยา ตำบลหนองปรือ Bang Lamung District, Chon Buri 20150. The salon telephone is +66 81 727 4874. Opening hours are 09:00–22:00, Pattaya time. The owner has not specified opening days. Social profiles and data retention policy still need to be supplied.
 
 Run input validation tests with `node --test tests/booking-validation.test.mjs`. The legacy `tests/firebase-integration.html` harness requires the updated booking API to be served as well (not just a static Python server). This creates one clearly labelled synthetic request in Firebase; do not include the test harness in the production `dist` directory.
 
@@ -132,3 +132,16 @@ The client signs in with Firebase, submits its own explicit consent through the 
 The browser cannot read `clubAccessTokens`, `clubAccessLinks` or `clubAccessLimits`; default-deny Firestore rules protect them. Configure TTL on `expiresAt` for cleanup. Never log bearer links, Firebase custom tokens or service credentials. These secrets are valid only for the configured lifespan regardless of delayed TTL cleanup.
 
 Run `npm test`, then verify the full path using a non-Google test inbox: invitation delivery → preview → personal confirmation → admin pending approval → activation → card. Do not fabricate client consent for a test.
+
+
+## Editable service price list
+
+Public menus are at `/#prices` and `/th/#prices`, with 49 supplied services in three tabs. Each entry has English and Thai names, integer THB prices, fixed/range/starting format, optional descriptions and units. The static baseline and initial no-JavaScript content come from `dist/service-menu-default.json`.
+
+In `/admin`, choose **Edit price list**, select a section and service, then edit names, descriptions, minimum/maximum prices and units. Administrators can add, hide, remove and reorder services, change section names, preview the draft, discard changes and **Publish price list**. Only publishing writes to Firebase. Existing authorised administrators retain the same roles; no new accounts or roles are granted.
+
+`/api/service-menu` reads `salonContent/serviceMenu` with the existing server Firebase credential. Public GET filters out hidden services and audit identity. Authenticated `GET ?editor=1` and PUT verify a non-revoked Firebase token, verified email, Google sign-in and either the salon account or an existing `admins/{uid}` owner role. Browser Firestore access to this collection remains denied by the existing default rule. No rules deployment or new secret is needed.
+
+Publishing validates the full bilingual schema and saves atomically using a revision check to prevent stale overwrites. If no published document exists, revision 0 uses the supplied baseline without a database write; the first authorised publication creates revision 1. There is no email side effect. A failed load displays an explicit refresh warning alongside the baseline; a failed publish keeps the draft. Clients fetch the latest published menu on page load with `no-store`.
+
+Printed menus and previously downloaded PDFs are independent snapshots; editing website prices does not change those files. Rebuild static content/translations with `npm run build:content` after changing the baseline or page copy. Ordinary admin publications require no deploy. Run `npm test` for baseline price preservation, bilingual formatting, safe rendering, permission checks, hidden-row filtering and concurrent-write protection.

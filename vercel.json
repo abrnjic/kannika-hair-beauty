@@ -55,6 +55,9 @@
     },
     "api/club-entry.mjs": {
       "maxDuration": 60
+    },
+    "api/service-menu.mjs": {
+      "maxDuration": 30
     }
   }
 }

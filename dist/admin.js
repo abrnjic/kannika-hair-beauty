@@ -1,3 +1,4 @@
+import {setupMenuAdmin} from './service-menu-admin.js';
 import {t, html, locale, language, localizeValidation} from './i18n.js';
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
 import {initializeAuth, browserSessionPersistence, browserPopupRedirectResolver, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
@@ -15,6 +16,7 @@ const $ = selector => document.querySelector(selector);
 let records = [], cursor = null, activeFilter = 'pending', session = 0, loading = false, saving = false, selected = null, administrator = null;
 const requestDialog = $('#request-dialog');
 const loyaltyAdmin=setupLoyaltyAdmin(db,()=>administrator);
+const menuAdmin=setupMenuAdmin(()=>administrator);
 $('#booking-loyalty').addEventListener('click',()=>{if(selected&&!saving)loyaltyAdmin.open(selected)});
 const statusLabel = status => ({pending:t('Awaiting review'), confirmed:t('Confirmed'), declined:t('Declined')}[status] || t('Unknown'));
 const dateLabel = value => {if(!value)return t('Not set');const date=new Date(value+'T12:00:00+07:00');return Number.isFinite(date.getTime())?new Intl.DateTimeFormat(locale,{day:'numeric',month:'short',year:'numeric',timeZone:'Asia/Bangkok'}).format(date):value};
@@ -25,7 +27,7 @@ function toast(message){$('#toast').textContent=message;$('#toast').hidden=false
 $('#toast').hidden=true;
 $('#today-label').textContent=new Intl.DateTimeFormat(locale,{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Bangkok'}).format(new Date())+' · '+t('Pattaya');
 function node(tag,text,className){const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(className)el.className=className;return el}
-function clearData(){loyaltyAdmin.reset();records=[];cursor=null;selected=null;administrator=null;$('#booking-rows').replaceChildren();$('#workspace').hidden=true;$('#access-pending').hidden=true;$('#pending-email').textContent='';$('#pending-uid').value='';$('#admin-email').textContent='';$('#search').value='';if(requestDialog.open)requestDialog.close();for(const key of ['all','pending','confirmed','declined'])$('#count-'+key).textContent='0'}
+function clearData(){menuAdmin.reset();loyaltyAdmin.reset();records=[];cursor=null;selected=null;administrator=null;$('#booking-rows').replaceChildren();$('#workspace').hidden=true;$('#access-pending').hidden=true;$('#pending-email').textContent='';$('#pending-uid').value='';$('#admin-email').textContent='';$('#search').value='';if(requestDialog.open)requestDialog.close();for(const key of ['all','pending','confirmed','declined'])$('#count-'+key).textContent='0'}
 function render(){
  const search=$('#search').value.trim().toLowerCase();
  const visible=records.filter(record=>(activeFilter==='all'||record.status===activeFilter)&&[record.name,record.email,record.service,t(record.service||''),record.id,record.date,record.confirmedDate].some(value=>String(value??'').toLowerCase().includes(search)));
@@ -98,7 +100,7 @@ $('#sign-in').addEventListener('click',async()=>{
 // Recover the result after Google returns to this tab; never log credentials or tokens.
 $('#sign-in').disabled=true;
 const redirectResult = getRedirectResult(auth).then(()=>null).catch(error=>error).finally(()=>{$('#sign-in').disabled=false});
-for(const id of ['#sign-out','#login-sign-out'])$(id).addEventListener('click',async()=>{if(saving){toast(t('Please wait for the current decision to finish saving.'));return}try{await signOut(auth)}catch{toast(t('Could not sign out. Please try again.'))}});
+for(const id of ['#sign-out','#login-sign-out'])$(id).addEventListener('click',async()=>{if(saving||menuAdmin.isSaving()){toast(t('Please wait for the current decision to finish saving.'));return}try{await signOut(auth)}catch{toast(t('Could not sign out. Please try again.'))}});
 onAuthStateChanged(auth,async user=>{
  const currentSession=++session;clearData();loading=false;$('#login-panel').hidden=false;$('#sign-in').hidden=!!user;$('#login-sign-out').hidden=!user;setError('#auth-error');
  if(!user){const error=await redirectResult;if(currentSession===session&&error)setError('#auth-error',t('Google sign-in could not finish ({code}). Please try again.',{code:error.code||'unknown'}));return;}
@@ -108,7 +110,7 @@ onAuthStateChanged(auth,async user=>{
   const salonAccount=user.email===salonEmail;
   const role=salonAccount?null:await getDocFromServer(doc(db,'admins',user.uid));if(currentSession!==session)return;setError('#auth-error');
   if(!salonAccount&&(!role?.exists()||role.data().role!=='owner')){$('#access-pending').hidden=false;$('#pending-email').textContent=user.email||'';$('#pending-uid').value=user.uid;return}
-  administrator=user;$('#login-panel').hidden=true;$('#workspace').hidden=false;$('#admin-email').textContent=user.email||'';loyaltyAdmin.start();await loadRequests();
+  administrator=user;$('#login-panel').hidden=true;$('#workspace').hidden=false;$('#admin-email').textContent=user.email||'';loyaltyAdmin.start();menuAdmin.start();await loadRequests();
  }catch(error){if(currentSession===session)setError('#auth-error',error.message===t('Sign in using an authorised Google account.')?error.message:t('Could not verify administrator access. Check your connection, then sign out and try again.'))}
 });
 $('#copy-uid').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('#pending-uid').value);toast(t('User ID copied'))}catch{$('#pending-uid').select();toast(t('Select and copy the user ID above'))}});

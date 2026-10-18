@@ -1,0 +1,1036 @@
+{
+  "schemaVersion": 1,
+  "groups": [
+    {
+      "id": "wash-styling",
+      "category": "hair",
+      "name": {
+        "en": "Wash & styling",
+        "th": "สระและจัดแต่ง"
+      },
+      "services": [
+        {
+          "id": "wash-styling-1",
+          "name": {
+            "en": "Wash & blow-dry",
+            "th": "สระไดร์"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 150,
+          "max": 250,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "wash-styling-2",
+          "name": {
+            "en": "Wash, blow-dry & flat iron",
+            "th": "สระไดร์+หนีบ"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 250,
+          "max": 350,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "wash-styling-3",
+          "name": {
+            "en": "Wash, blow-dry & flat iron - extensions",
+            "th": "สระไดร์+หนีบผมต่อ"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 350,
+          "max": 500,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "wash-styling-4",
+          "name": {
+            "en": "Wash & volume blow-dry",
+            "th": "สระไดร์ วอลลุ่ม"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 200,
+          "max": 350,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "wash-styling-5",
+          "name": {
+            "en": "Wash, blow-dry & curls",
+            "th": "สระไดร์ ม้วนลอน"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 250,
+          "max": 450,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "treatments",
+      "category": "hair",
+      "name": {
+        "en": "Hair treatments",
+        "th": "ทรีตเมนต์"
+      },
+      "services": [
+        {
+          "id": "treatments-1",
+          "name": {
+            "en": "Basic hair treatment",
+            "th": "ทรีตเมนต์พื้นฐาน"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 300,
+          "max": 600,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "treatments-2",
+          "name": {
+            "en": "Intensive hair treatment",
+            "th": "ทรีตเมนต์เข้มข้น"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 500,
+          "max": 1200,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "treatments-3",
+          "name": {
+            "en": "Nourishing hair steam treatment",
+            "th": "อบไอน้ำบำรุงผม"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 300,
+          "max": 700,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "treatments-4",
+          "name": {
+            "en": "Scalp spa",
+            "th": "สปาหนังศีรษะ"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 400,
+          "max": 900,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "treatments-5",
+          "name": {
+            "en": "Hair gloss / toner",
+            "th": "เคลือบเงา / ปรับโทนสี"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 500,
+          "max": 1200,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "treatments-6",
+          "name": {
+            "en": "Keratin treatment",
+            "th": "ทรีตเมนต์เคราติน"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 1000,
+          "max": 2500,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "cut-care",
+      "category": "hair",
+      "name": {
+        "en": "Cut & care",
+        "th": "ตัดและดูแล"
+      },
+      "services": [
+        {
+          "id": "cut-care-1",
+          "name": {
+            "en": "Haircut / layered cut",
+            "th": "ตัดผมซอยผม"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 200,
+          "max": 500,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "cut-care-2",
+          "name": {
+            "en": "Nano hair spa",
+            "th": "สปานาโน"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 200,
+          "max": 350,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "cut-care-3",
+          "name": {
+            "en": "Hair steaming",
+            "th": "อบไอน้ำ"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 200,
+          "max": 300,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "straightening-perms",
+      "category": "hair",
+      "name": {
+        "en": "Straightening & perms",
+        "th": "ยืดและดัด"
+      },
+      "services": [
+        {
+          "id": "straightening-perms-1",
+          "name": {
+            "en": "Hair straightening",
+            "th": "ยืดผมตรง"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 1200,
+          "max": 2500,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "straightening-perms-2",
+          "name": {
+            "en": "Volume straightening",
+            "th": "ยืดวอลลุ่ม"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 1500,
+          "max": 3000,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "straightening-perms-3",
+          "name": {
+            "en": "Root straightening & curled ends",
+            "th": "ยืดโคน ดัดปลาย"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 2000,
+          "max": 3500,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "straightening-perms-4",
+          "name": {
+            "en": "Cold perm",
+            "th": "ดัดเย็น"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 1200,
+          "max": 2000,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "straightening-perms-5",
+          "name": {
+            "en": "Digital perm",
+            "th": "ดัดดิจิตอล"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 2000,
+          "max": 3500,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "straightening-perms-6",
+          "name": {
+            "en": "Men's volume perm",
+            "th": "ดัดวอลลุ่มชาย"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 1200,
+          "max": 2000,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "colour",
+      "category": "hair",
+      "name": {
+        "en": "Colour",
+        "th": "สีผม"
+      },
+      "services": [
+        {
+          "id": "colour-1",
+          "name": {
+            "en": "Root colour touch-up",
+            "th": "เติมสีโคนผม"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 500,
+          "max": 1000,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "colour-2",
+          "name": {
+            "en": "Single-process colour, no bleach",
+            "th": "ทำสีพื้น ไม่ฟอก"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 800,
+          "max": 1800,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "colour-3",
+          "name": {
+            "en": "Grey coverage",
+            "th": "ปิดผมหงอก"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 500,
+          "max": 1200,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "colour-4",
+          "name": {
+            "en": "Hair bleaching",
+            "th": "ฟอกสีผม"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 800,
+          "max": 1500,
+          "priceKind": "range",
+          "unit": {
+            "en": "session",
+            "th": "ครั้ง"
+          },
+          "visible": true
+        },
+        {
+          "id": "colour-5",
+          "name": {
+            "en": "Highlights",
+            "th": "ไฮไลต์"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 1200,
+          "max": 2500,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "colour-6",
+          "name": {
+            "en": "Balayage / gradient colour",
+            "th": "บาลายาจ / ไล่สี"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 2000,
+          "max": 4500,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "lashes",
+      "category": "lashes",
+      "name": {
+        "en": "Eyelash extensions",
+        "th": "ต่อขนตา"
+      },
+      "services": [
+        {
+          "id": "lashes-1",
+          "name": {
+            "en": "Natural",
+            "th": "ทรงธรรมชาติ"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 399,
+          "max": 499,
+          "priceKind": "starting",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "lashes-2",
+          "name": {
+            "en": "Soft natural",
+            "th": "ทรงธรรมชาติหวาน ๆ"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 450,
+          "max": 590,
+          "priceKind": "starting",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "lashes-3",
+          "name": {
+            "en": "YY / 2D - added fullness",
+            "th": "YY / 2D - ทรงเพิ่มความหนา"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 499,
+          "max": 599,
+          "priceKind": "starting",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "lashes-4",
+          "name": {
+            "en": "3D Volume - soft & fluffy",
+            "th": "3D Volume - ทรงฟูนุ่ม"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 599,
+          "max": 699,
+          "priceKind": "starting",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "lashes-5",
+          "name": {
+            "en": "Hybrid - natural & volume mix",
+            "th": "Hybrid - ทรงผสมธรรมชาติและวอลลุ่ม"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 599,
+          "max": 799,
+          "priceKind": "starting",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "lashes-6",
+          "name": {
+            "en": "Wispy - alternating lengths",
+            "th": "Wispy - ทรงเส้นสลับยาวสั้น"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 799,
+          "max": 999,
+          "priceKind": "starting",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "lashes-7",
+          "name": {
+            "en": "Cat Eye / Fox Eye - lifted outer corners",
+            "th": "Cat Eye / Fox Eye - ทรงหางตาเฉี่ยว"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 599,
+          "max": 899,
+          "priceKind": "starting",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "lashes-8",
+          "name": {
+            "en": "Mega / Russian Volume - full & dense",
+            "th": "Mega / Russian Volume - ทรงหนาฟูเต็ม"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 899,
+          "max": 1299,
+          "priceKind": "starting",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "gel-extensions",
+      "category": "nails",
+      "name": {
+        "en": "Gel & extensions",
+        "th": "สีเจลและต่อเล็บ"
+      },
+      "services": [
+        {
+          "id": "gel-extensions-1",
+          "name": {
+            "en": "Single-colour gel polish - hands",
+            "th": "ทาสีเจลมือ สีพื้น"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 150,
+          "max": 150,
+          "priceKind": "fixed",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "gel-extensions-2",
+          "name": {
+            "en": "Single-colour gel polish - feet",
+            "th": "ทาสีเจลเท้า สีพื้น"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 150,
+          "max": 150,
+          "priceKind": "fixed",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "gel-extensions-3",
+          "name": {
+            "en": "PVC nail extensions",
+            "th": "ต่อ PVC"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 200,
+          "max": 400,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "gel-extensions-4",
+          "name": {
+            "en": "Gel nail extensions",
+            "th": "ต่อเล็บเจล"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 500,
+          "max": 900,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "gel-extensions-5",
+          "name": {
+            "en": "Acrylic nail extensions",
+            "th": "ต่ออะคริลิค"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 600,
+          "max": 1200,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "gel-extensions-6",
+          "name": {
+            "en": "Nail strengthening overlay",
+            "th": "เสริมหน้าเล็บ"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 250,
+          "max": 400,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "special-finishes",
+      "category": "nails",
+      "name": {
+        "en": "Special finishes",
+        "th": "สีพิเศษ"
+      },
+      "services": [
+        {
+          "id": "special-finishes-1",
+          "name": {
+            "en": "Cat-eye polish",
+            "th": "สีลูกแก้ว / Cat Eye"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 250,
+          "max": 350,
+          "priceKind": "range",
+          "unit": {
+            "en": "hands / feet",
+            "th": "มือ-เท้า"
+          },
+          "visible": true
+        },
+        {
+          "id": "special-finishes-2",
+          "name": {
+            "en": "Flash / glitter polish",
+            "th": "สีแฟลช / กลิตเตอร์"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 250,
+          "max": 350,
+          "priceKind": "range",
+          "unit": {
+            "en": "hands / feet",
+            "th": "มือ-เท้า"
+          },
+          "visible": true
+        },
+        {
+          "id": "special-finishes-3",
+          "name": {
+            "en": "Syrup / jelly polish",
+            "th": "สีไซรัป (Syrup / Jelly)"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 250,
+          "max": 350,
+          "priceKind": "range",
+          "unit": {
+            "en": "hands / feet",
+            "th": "มือ-เท้า"
+          },
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "maintenance",
+      "category": "nails",
+      "name": {
+        "en": "Maintenance",
+        "th": "เติมและถอด"
+      },
+      "services": [
+        {
+          "id": "maintenance-1",
+          "name": {
+            "en": "Nail extension infill",
+            "th": "เติมโคน-ต่อเล็บที่ต่อ"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 250,
+          "max": 500,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "maintenance-2",
+          "name": {
+            "en": "Gel polish removal",
+            "th": "ถอดสีเจล"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 50,
+          "max": 150,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "maintenance-3",
+          "name": {
+            "en": "Nail extension removal",
+            "th": "ถอดเล็บต่อ"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 100,
+          "max": 300,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "hand-foot-care",
+      "category": "nails",
+      "name": {
+        "en": "Hand & foot care",
+        "th": "ดูแลมือและเท้า"
+      },
+      "services": [
+        {
+          "id": "hand-foot-care-1",
+          "name": {
+            "en": "Cuticle care - hands / feet",
+            "th": "ตัดหนังมือ-เท้า"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 250,
+          "max": 450,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "hand-foot-care-2",
+          "name": {
+            "en": "Foot spa & heel exfoliation",
+            "th": "สปาเท้า ขัดส้นเท้า"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 150,
+          "max": 250,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        },
+        {
+          "id": "hand-foot-care-3",
+          "name": {
+            "en": "Ingrown toenail trimming",
+            "th": "ตัดเล็บขบ"
+          },
+          "description": {
+            "en": "",
+            "th": ""
+          },
+          "min": 300,
+          "max": 450,
+          "priceKind": "range",
+          "unit": {
+            "en": "",
+            "th": ""
+          },
+          "visible": true
+        }
+      ]
+    }
+  ]
+}
