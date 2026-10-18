@@ -17,7 +17,7 @@ export async function recordLoyaltyEvent(db,user,memberId,input){
  if(bookingId&&!/^[a-f\d-]{36}$/i.test(bookingId))throw Error('Choose a valid booking reference.');
  const eventId=type==='visit'?(bookingId?'booking_'+bookingId:await manualEventId(date,reference)):'redeem_'+input.requestId;
  if(!/^(booking_[a-f\d-]{36}|manual_[a-f\d]{64}|redeem_[a-f\d-]{36})$/i.test(eventId))throw Error('Invalid event reference.');
- const note=String(input.note??'').trim();if(note.length>300||(type==='gift'&&!note))throw Error('Describe the selected complimentary treatment.');
+ const note=String(input.note??'').trim();if(note.length>300||(type==='gift'&&!note))throw Error('Describe the complete treatment chosen by the client.');
  const memberRef=doc(db,'loyaltyMembers',memberId),eventRef=doc(db,'loyaltyMembers',memberId,'events',eventId);
  return runTransaction(db,async tx=>{
   const [member,existing]=await Promise.all([tx.get(memberRef),tx.get(eventRef)]);

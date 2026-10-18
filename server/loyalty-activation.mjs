@@ -1,3 +1,4 @@
+import {completeTreatmentReward} from '../dist/loyalty-rewards.js';
 import {beautyClubEmail} from './beauty-club-email.mjs';
 import {recipient} from './booking-notifications.mjs';
 const project='kannika-4f9b6',root=`https://firestore.googleapis.com/v1/projects/${project}/databases/(default)/documents`;
@@ -9,7 +10,7 @@ export function activationEmail(member,from){
  const message=th?'Kannika อนุมัติและเปิดใช้งานสมาชิกของคุณแล้ว บัตรสะสมแสตมป์พร้อมใช้งาน คุณเริ่มสะสมแสตมป์ได้หลังรับบริการและชำระเงินแต่ละครั้ง':'Kannika has approved and activated your membership. Your digital card is ready, and you can now earn a stamp after each completed, paid visit.';
  const instructions=th?'เปิดบัตรและลงชื่อเข้าใช้ด้วยอีเมลเดียวกับที่ใช้สมัคร แสดงบัตรให้ทีมงานที่ร้านเมื่อมาใช้บริการ':'Open your card and sign in with the same email you used to join. Show your card to the salon team when you visit.';
  const button=th?'เปิดบัตร Beauty Club':'Open your Beauty Club card';
- return {from,to:[member.email],reply_to:recipient,subject:'Kannika — '+title,text:[title,greeting,message,instructions,button+': '+url,recipient,'+66 81 727 4874'].join('\n\n'),html:beautyClubEmail({language:member.language,title,paragraphs:[greeting,message,instructions],url,button})};
+ return {from,to:[member.email],reply_to:recipient,subject:'Kannika — '+title,text:[title,greeting,message,completeTreatmentReward[th?'th':'en'],instructions,button+': '+url,recipient,'+66 81 727 4874'].join('\n\n'),html:beautyClubEmail({language:member.language,title,paragraphs:[greeting,message,completeTreatmentReward[th?'th':'en'],instructions],url,button})};
 }
 export async function handleLoyaltyActivation(request,{fetchImpl=fetch,env=process.env,now=()=>new Date()}={}){
  const reply=(status,body)=>({status,body});
