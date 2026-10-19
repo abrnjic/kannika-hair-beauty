@@ -543,5 +543,13 @@ export default {
   "Describe the complete treatment chosen by the client.": "กรุณาระบุบริการแบบครบรายการที่ลูกค้าเลือก",
   "Redeem a complete treatment of choice": "ใช้สิทธิ์บริการฟรีแบบครบรายการที่ลูกค้าเลือก",
   "Complete treatment of choice used": "ใช้สิทธิ์บริการฟรีแบบครบรายการที่เลือกแล้ว",
-  "Apply the 10% discount at the next visit. For the ten-visit reward, record the complete treatment chosen by the client. Any one service from the entire price list is eligible, with no value limit. Check with the client before using a reward.": "ใช้ส่วนลด 10% สำหรับการมาใช้บริการครั้งถัดไป สำหรับรางวัลครบ 10 ครั้ง ให้บันทึกบริการแบบครบรายการที่ลูกค้าเลือก เลือกได้ 1 บริการจากรายการราคาทั้งหมด โดยไม่จำกัดมูลค่า ตรวจสอบกับลูกค้าก่อนใช้สิทธิ์"
+  "Apply the 10% discount at the next visit. For the ten-visit reward, record the complete treatment chosen by the client. Any one service from the entire price list is eligible, with no value limit. Check with the client before using a reward.": "ใช้ส่วนลด 10% สำหรับการมาใช้บริการครั้งถัดไป สำหรับรางวัลครบ 10 ครั้ง ให้บันทึกบริการแบบครบรายการที่ลูกค้าเลือก เลือกได้ 1 บริการจากรายการราคาทั้งหมด โดยไม่จำกัดมูลค่า ตรวจสอบกับลูกค้าก่อนใช้สิทธิ์",
+  "STAY CLOSE TO KANNIKA": "ติดตามเรื่องราวจาก KANNIKA",
+  "Follow our salon for hair, nails, lashes and moments from Kannika.": "ติดตามผลงานทำผม ทำเล็บ ต่อขนตา และช่วงเวลาดี ๆ จาก Kannika",
+  "Follow Kannika on social media": "ติดตาม Kannika บนโซเชียลมีเดีย",
+  "Kannika on Facebook (opens in a new tab)": "Kannika บน Facebook (เปิดในแท็บใหม่)",
+  "Kannika on Instagram (opens in a new tab)": "Kannika บน Instagram (เปิดในแท็บใหม่)",
+  "Kannika on TikTok (opens in a new tab)": "Kannika บน TikTok (เปิดในแท็บใหม่)",
+  "Stay": "เติม",
+  "inspired.": "แรงบันดาลใจ"
 };
