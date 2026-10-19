@@ -1,9 +1,9 @@
 export function rewardSummary(member={}){
  const stamps=member.stamps??0,discountsUsed=member.discountsUsed??0,giftsUsed=member.giftsUsed??0;
  if(![stamps,discountsUsed,giftsUsed].every(n=>Number.isSafeInteger(n)&&n>=0))throw Error('Invalid loyalty balance.');
- const discountEarned=Math.floor((stamps+5)/10),giftEarned=Math.floor(stamps/10);
- if(discountsUsed>discountEarned||giftsUsed>giftEarned)throw Error('Invalid loyalty balance.');
- return {stamps,progress:stamps%10,discounts:discountEarned-discountsUsed,gifts:giftEarned-giftsUsed,next:stamps%10<5?5-stamps%10:10-stamps%10};
+ const legacyDiscountEarned=Math.floor((stamps+5)/10),giftEarned=Math.floor(stamps/10);
+ if(discountsUsed>legacyDiscountEarned||giftsUsed>giftEarned)throw Error('Invalid loyalty balance.');
+ return {stamps,progress:stamps%10,discounts:0,gifts:giftEarned-giftsUsed,next:10-stamps%10};
 }
 export function memberDetails(input){
  const name=String(input.name??'').trim();if(!name||name.length>100)throw Error('Please enter your name.');

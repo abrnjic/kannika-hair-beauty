@@ -1,5 +1,5 @@
-// One shared promise for customer-facing membership and reward emails.
+// Shared reward promise for the website and membership emails.
 export const completeTreatmentReward = {
- en:'After every 10 completed, paid visits, choose one complete treatment from the entire salon price list, free of charge, with no value limit.',
- th:'เมื่อรับบริการและชำระเงินครบทุก 10 ครั้ง เลือกบริการแบบครบรายการได้ 1 บริการจากรายการราคาทั้งหมดของร้าน ฟรีเต็มจำนวน โดยไม่จำกัดมูลค่า'
+ "en": "After every 10 completed, paid services, receive one free hair wash and flat-iron styling service. To claim it, follow at least one official Kannika profile on Instagram, Facebook or TikTok.",
+ "th": "เมื่อใช้บริการที่เสร็จและชำระเงินแล้วครบทุก 10 รายการ รับบริการสระผมและหนีบผมฟรี 1 ครั้ง โดยต้องติดตามบัญชีทางการของ Kannika บน Instagram, Facebook หรือ TikTok อย่างน้อย 1 ช่องทางเพื่อใช้สิทธิ์"
 };
