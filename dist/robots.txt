@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /__/
+
+Sitemap: https://kannika-hair-beauty.vercel.app/sitemap.xml

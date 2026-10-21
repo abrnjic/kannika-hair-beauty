@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "build:content": "node scripts/build-service-menu.mjs && python3 scripts/build-translations.py && node scripts/build-service-menu.mjs --thai-only"
+    "build:content": "node scripts/build-service-menu.mjs && python3 scripts/build-translations.py && node scripts/build-service-menu.mjs --thai-only && node scripts/build-seo.mjs"
   },
   "dependencies": {
     "firebase-admin": "14.5.0"
