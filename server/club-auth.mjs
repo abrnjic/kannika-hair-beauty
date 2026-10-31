@@ -25,7 +25,7 @@ export async function reserveAccess({db},email,uid,ip,now){
 export async function generateCardLink(email,language,{env=process.env,now=new Date(),purpose='access',name='',getServices=clubAuthServices}={}){
  const {db}=await getServices(env),id=hash([purpose,email,language,accessWindow(now)].join('/'));
  const cache=db.collection('clubAccessLinks').doc(id),token=randomBytes(32).toString('hex'),tokenId=hash(token);
- const link='https://kannika-hair-beauty.vercel.app'+(language==='th'?'/th/club':'/club')+'#access='+token;
+ const link='https://www.kannikabeauty.com'+(language==='th'?'/th/club':'/club')+'#access='+token;
  return db.runTransaction(async tx=>{
   const previous=(await tx.get(cache)).data();
   if(previous?.tokenId){const stored=(await tx.get(db.collection('clubAccessTokens').doc(previous.tokenId))).data();if(stored&&!stored.usedAt&&(stored.expiresAt.toMillis?.()??stored.expiresAt.getTime())>now.getTime())return previous.link}

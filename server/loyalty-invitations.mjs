@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import {recipient} from './booking-notifications.mjs';
 const project='kannika-4f9b6',root=`https://firestore.googleapis.com/v1/projects/${project}/databases/(default)/documents`;
 export function invitationEmail(client,from,signInLink){
- const th=client.language==='th',url=signInLink||'https://kannika-hair-beauty.vercel.app'+(th?'/th/club':'/club');
+ const th=client.language==='th',url=signInLink||'https://www.kannikabeauty.com'+(th?'/th/club':'/club');
  const title=th?'ขอเชิญเข้าร่วม Kannika Beauty Club':'You’re invited to Kannika Beauty Club';
  const greeting=th?`สวัสดี ${client.name}`:`Hello ${client.name},`;
  const intro=(th?'สะสมแสตมป์ 1 ดวงต่อบริการที่เสร็จและชำระเงินแล้ว 1 รายการ':'Earn one stamp for each completed, paid service.')+' '+completeTreatmentReward[th?'th':'en'];

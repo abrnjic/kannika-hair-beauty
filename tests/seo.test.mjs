@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
-const origin='https://kannika-hair-beauty.vercel.app';
+const origin='https://www.kannikabeauty.com';
 for(const [lang,path,file] of [['en','/','dist/index.html'],['th','/th/','dist/th/index.html']]){
  test(`${lang}: canonical and reciprocal language URLs identify only public pages`,()=>{
   const s=read(file);assert.equal((s.match(/rel="canonical"/g)||[]).length,1);assert.ok(s.includes(`rel="canonical" href="${origin+path}"`));

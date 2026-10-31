@@ -1,7 +1,7 @@
 // Run after translations: ThaiPage deliberately escapes script contents, so JSON-LD
 // is emitted here, as valid JSON, independently for each public language.
 import {readFileSync, writeFileSync} from 'node:fs';
-const origin='https://kannika-hair-beauty.vercel.app';
+const origin='https://www.kannikabeauty.com';
 const location=JSON.parse(readFileSync('salon-location.json','utf8'));
 const escape=value=>value.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
 const copy={

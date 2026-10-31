@@ -4,7 +4,7 @@ import {recipient} from './booking-notifications.mjs';
 const project='kannika-4f9b6',root=`https://firestore.googleapis.com/v1/projects/${project}/databases/(default)/documents`;
 const decode=d=>Object.fromEntries(Object.entries(d.fields??{}).map(([key,value])=>[key,value.stringValue??value.timestampValue??value.booleanValue]));
 export function activationEmail(member,from){
- const th=member.language==='th',url='https://kannika-hair-beauty.vercel.app'+(th?'/th/club':'/club');
+ const th=member.language==='th',url='https://www.kannikabeauty.com'+(th?'/th/club':'/club');
  const title=th?'สมาชิก Beauty Club ของคุณได้รับการอนุมัติแล้ว':'Your Beauty Club membership is approved';
  const greeting=th?`สวัสดี ${member.name}`:`Hello ${member.name},`;
  const message=th?'Kannika อนุมัติและเปิดใช้งานสมาชิกของคุณแล้ว บัตรสะสมแสตมป์พร้อมใช้งาน คุณเริ่มสะสมแสตมป์ได้ต่อบริการที่เสร็จและชำระเงินแล้ว 1 รายการ':'Kannika has approved and activated your membership. Your digital card is ready, and you can now earn a stamp after each completed, paid service.';

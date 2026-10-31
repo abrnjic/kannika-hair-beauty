@@ -6,7 +6,7 @@ import {t,language,locale,localizeValidation} from './i18n.js';
 import {enrolMember} from './loyalty-store.js';
 import {setupCardEntry} from './club-entry.js';
 import {rewardSummary} from './loyalty-policy.js';
-const $=s=>document.querySelector(s),production=location.hostname==='kannika-hair-beauty.vercel.app';
+const $=s=>document.querySelector(s),production=['kannika-hair-beauty.vercel.app','kannikabeauty.com','www.kannikabeauty.com'].includes(location.hostname);
 const app=initializeApp({...firebaseConfig,...(production?{authDomain:location.hostname}:{})},'kannika-club');
 const auth=initializeAuth(app,{persistence:[indexedDBLocalPersistence,browserLocalPersistence,browserSessionPersistence,inMemoryPersistence],popupRedirectResolver:browserPopupRedirectResolver}),db=getFirestore(app);auth.languageCode=language;
 let busy=false,session=0;let emailLink=isSignInWithEmailLink(auth,location.href)?location.href:null;const cardToken=new URL(location.href).hash.slice(1).startsWith('access=')?new URLSearchParams(new URL(location.href).hash.slice(1)).get('access'):null;let processingLink=!!emailLink||!!cardToken;

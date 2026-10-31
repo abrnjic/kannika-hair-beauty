@@ -5,7 +5,7 @@ import {recipient} from './booking-notifications.mjs';
 const project='kannika-4f9b6',root=`https://firestore.googleapis.com/v1/projects/${project}/databases/(default)/documents`;
 const decode=d=>Object.fromEntries(Object.entries(d.fields??{}).map(([k,v])=>[k,v.stringValue??v.timestampValue??(v.integerValue!==undefined?Number(v.integerValue):v.booleanValue)]));
 export function loyaltyEmail(member,event,from){
- const th=event.language==='th',s=rewardSummary(event),url='https://kannika-hair-beauty.vercel.app'+(th?'/th/club':'/club');
+ const th=event.language==='th',s=rewardSummary(event),url='https://www.kannikabeauty.com'+(th?'/th/club':'/club');
  const title=th?(event.type==='visit'?'ขอบคุณที่มาใช้บริการ Kannika':'อัปเดตสิทธิพิเศษ Beauty Club'):(event.type==='visit'?'Thank you for visiting Kannika':'Your Beauty Club reward update');
  const action=th?({visit:'เพิ่มตราประทับสำหรับการมาใช้บริการแล้ว',discount:'ใช้สิทธิ์ส่วนลด 10% แล้ว',gift:'ใช้สิทธิ์สระผมและหนีบผมฟรีแล้ว'}[event.type]):({visit:'A service stamp has been added.',discount:'Your 10% reward has been used.',gift:'Your free hair wash and flat-iron styling has been redeemed.'}[event.type]);
  const progress=th?`ใช้บริการสะสม ${s.stamps} รายการ อีก ${s.next} รายการถึงสิทธิพิเศษถัดไป`:`${s.stamps} lifetime services. ${s.next} more services to your next reward.`;

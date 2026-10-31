@@ -8,7 +8,7 @@ import {validateDecision} from './admin-policy.js';
 import {setupLoyaltyAdmin} from './loyalty-admin.js';
 import {bangkokToday} from './booking-validation.js';
 // Use same-origin auth helpers on production so redirect sign-in survives storage partitioning.
-const sameTabSignIn = location.hostname === 'kannika-hair-beauty.vercel.app';
+const sameTabSignIn = ['kannika-hair-beauty.vercel.app','kannikabeauty.com','www.kannikabeauty.com'].includes(location.hostname);
 const app = initializeApp({...firebaseConfig, ...(sameTabSignIn ? {authDomain: location.hostname} : {})}, 'kannika-admin');
 const auth = initializeAuth(app, {persistence: browserSessionPersistence, popupRedirectResolver: browserPopupRedirectResolver});
 const db = getFirestore(app);
