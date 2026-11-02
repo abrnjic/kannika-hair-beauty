@@ -9,11 +9,11 @@ for(const [lang,path,file] of [['en','/','dist/index.html'],['th','/th/','dist/t
   for(const [language,route] of [['en','/'],['th','/th/'],['x-default','/']])assert.ok(s.includes(`hreflang="${language}" href="${origin+route}"`));
   assert.match(s,/<meta name="robots" content="index,follow,max-image-preview:large">/);assert.equal((s.match(/<h1\b/g)||[]).length,1);
  });
- test(`${lang}: valid structured business data matches visible address and future opening`,()=>{
+ test(`${lang}: valid structured business data matches visible address and current opening status`,()=>{
   const s=read(file),json=JSON.parse(s.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
   const business=json['@graph'][0];assert.equal(business.name,'Kannika Hair & Beauty Pattaya');assert.equal(business.telephone,'+66817274874');assert.equal(business.address.postalCode,'20150');assert.equal(business.geo.latitude,12.922515);assert.equal(business.geo.longitude,100.8778609);
   assert.equal(business.openingHoursSpecification[0].validFrom,'2026-11-01');assert.equal(business.openingHoursSpecification[0].dayOfWeek.length,7);assert.equal(business.openingHoursSpecification[0].opens,'09:00');assert.equal(business.openingHoursSpecification[0].closes,'22:00');
-  assert.ok(s.includes('datetime="2026-11-01"'));assert.ok(!('aggregateRating' in business));assert.ok(!('review' in business));assert.equal(business.sameAs.length,3);assert.equal(json['@graph'][2].inLanguage,lang);
+  assert.ok(s.includes(lang==='en'?'We’re open. Welcome to Kannika.':'เปิดให้บริการแล้ว ยินดีต้อนรับสู่ Kannika'));assert.ok(!s.includes('Opening 1 November 2026'));assert.ok(!s.includes('เปิดวันที่ 1 พฤศจิกายน 2569'));assert.equal(new URL(business.hasMap).searchParams.get('query'),'12.922515,100.8778609');assert.ok(!('aggregateRating' in business));assert.ok(!('review' in business));assert.equal(business.sameAs.length,3);assert.equal(json['@graph'][2].inLanguage,lang);
  });
  test(`${lang}: metadata, real share asset and indexable treatment copy exist before JavaScript`,()=>{
   const s=read(file);assert.equal((s.match(/name="description"/g)||[]).length,1);assert.ok(s.includes(`property="og:url" content="${origin+path}"`));assert.match(s,/name="twitter:card" content="summary_large_image"/);assert.match(s,/og:image:width" content="1200"/);
