@@ -24,3 +24,6 @@
 header{position:relative}
 @media(max-width:760px){header > nav:not(.language-switch){top:100%;flex-wrap:wrap;gap:14px 24px}header .brand{min-width:0;flex-shrink:1}.original-header-logo{width:min(210px,calc(100vw - 190px));max-width:100%}.header-right{flex-shrink:0;gap:8px}.menu-toggle{flex-shrink:0;margin-left:0}}
 @media(max-width:420px){header{gap:10px}.header-right{gap:6px}}
+
+/* Real salon photography: retain natural detail and readable service captions. */
+.hero-image > .salon-work-photo{filter:brightness(.92) saturate(.9);object-position:center 40%}.about-visual > .salon-work-photo{filter:brightness(.95) saturate(.9);object-position:center 45%}.service-card > .salon-work-photo{filter:brightness(.88) saturate(.9)}.service-card[data-book="Eyelash extensions"] > .salon-work-photo{object-position:54% center}
