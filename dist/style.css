@@ -41,3 +41,5 @@ header > nav:not(.language-switch) a{white-space:nowrap}
 }
 
 .form-row>*{min-width:0}@media(max-width:420px){#booking-form .form-row{grid-template-columns:minmax(0,1fr)}}
+
+@media(max-width:360px){html[lang=en] .hero h1{font-size:calc(clamp(50px,16vw,57px) + 1px)}}
