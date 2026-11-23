@@ -548,5 +548,7 @@ export default {
   "I verified the client follows at least one official salon profile.": "ฉันตรวจสอบแล้วว่าลูกค้าติดตามบัญชีทางการของร้านอย่างน้อย 1 ช่องทาง",
   "Verify that the client follows at least one official salon profile.": "กรุณาตรวจสอบว่าลูกค้าติดตามบัญชีทางการของร้านอย่างน้อย 1 ช่องทาง",
   "Add a stamp for each completed, paid service. Find the client by email to get started.": "เพิ่มตราประทับต่อบริการที่เสร็จและชำระเงินแล้ว 1 รายการ เริ่มต้นโดยค้นหาลูกค้าจากอีเมล",
-  "Accepted means the client signed in and agreed to the programme rules. Open an accepted client to activate membership, then add one stamp per completed, paid service.": "ยอมรับแล้ว หมายถึงลูกค้าลงชื่อเข้าใช้และยอมรับกติกา เปิดข้อมูลลูกค้าเพื่อเปิดใช้งานสมาชิก แล้วเพิ่ม 1 ตราประทับต่อบริการที่เสร็จและชำระเงินแล้ว 1 รายการ"
+  "Accepted means the client signed in and agreed to the programme rules. Open an accepted client to activate membership, then add one stamp per completed, paid service.": "ยอมรับแล้ว หมายถึงลูกค้าลงชื่อเข้าใช้และยอมรับกติกา เปิดข้อมูลลูกค้าเพื่อเปิดใช้งานสมาชิก แล้วเพิ่ม 1 ตราประทับต่อบริการที่เสร็จและชำระเงินแล้ว 1 รายการ",
+  "Coral pink nail extensions with white bow nail art at Kannika Hair & Beauty Pattaya": "ผลงานต่อเล็บสีชมพูคอรัลแต่งโบว์สีขาวที่ร้าน Kannika Hair & Beauty Pattaya",
+  "Close-up of a client’s eyelash extensions at Kannika Hair & Beauty Pattaya": "ภาพระยะใกล้ผลงานต่อขนตาของลูกค้าที่ร้าน Kannika Hair & Beauty Pattaya"
 };
