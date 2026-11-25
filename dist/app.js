@@ -1,6 +1,8 @@
 import {t, html, bookingCopy, localizeValidation} from './i18n.js';
 import {bookingsEnabled} from './firebase-config.js';
 import {validateBooking, bangkokToday} from './booking-validation.js';
+const decemberOffer = document.querySelector('#december-offer');
+if (decemberOffer && Date.now() >= Date.parse('2027-01-01T00:00:00+07:00')) decemberOffer.hidden = true;
 let submitting = false;
 let completed = false;
 let latestRequest=null;

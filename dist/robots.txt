@@ -3,4 +3,4 @@ Allow: /
 Disallow: /api/
 Disallow: /__/
 
-Sitemap: https://kannika-hair-beauty.vercel.app/sitemap.xml
+Sitemap: https://www.kannikabeauty.com/sitemap.xml

@@ -43,3 +43,6 @@ header > nav:not(.language-switch) a{white-space:nowrap}
 .form-row>*{min-width:0}@media(max-width:420px){#booking-form .form-row{grid-template-columns:minmax(0,1fr)}}
 
 @media(max-width:360px){html[lang=en] .hero h1{font-size:calc(clamp(50px,16vw,57px) + 1px)}}
+
+/* December 2026 promotion: in document flow so it never covers navigation or the hero. */
+.december-offer{margin:28px 5.3% 0;padding:25px 30px;border:1px solid var(--gold);background:var(--panel);display:flex;align-items:center;justify-content:space-between;gap:24px}.december-offer[hidden]{display:none}.december-offer>div{min-width:0}.december-offer .december-offer-date{font-size:12px;letter-spacing:1.2px;color:var(--gold);margin:0 0 8px}.december-offer h2{font-family:Manrope,Arial,sans-serif;font-size:clamp(25px,3vw,36px);line-height:1.25;color:var(--gold);margin:0 0 10px}.december-offer p{line-height:1.7;margin:0;font-size:14px}.december-offer .button{flex-shrink:0;white-space:normal;text-align:left;line-height:1.5}@media(max-width:900px){.december-offer{flex-direction:column;align-items:flex-start;padding:22px;gap:18px}}@media(max-width:420px){.december-offer{margin:20px 6% 0;padding:18px}.december-offer .button{width:100%;gap:16px}.december-offer .december-offer-date{font-size:11px;letter-spacing:.5px}}
