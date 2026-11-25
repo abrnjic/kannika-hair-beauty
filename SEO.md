@@ -13,7 +13,7 @@ Production origin: https://www.kannikabeauty.com
 
 ## Crawling
 
-`/robots.txt` advertises `/sitemap.xml`. The sitemap contains only the two canonical public pages. Card and administration pages retain `noindex,nofollow` in HTML, with matching headers on their clean URLs. They are not disallowed in robots.txt, so crawlers can see their noindex directives. This is indexing control, not authorization; existing Firebase protections remain responsible for access control. API and Firebase helper paths are excluded from crawling. Unknown routes use a bilingual 404 page, with a real HTTP 404 supplied by Vercel.
+`/robots.txt` advertises `/sitemap.xml`. Eight service detail pages (four treatments in English and Thai) expand the sitemap to ten canonical public URLs. Card and administration pages retain `noindex,nofollow` in HTML, with matching headers on their clean URLs. They are not disallowed in robots.txt, so crawlers can see their noindex directives. This is indexing control, not authorization; existing Firebase protections remain responsible for access control. API and Firebase helper paths are excluded from crawling. Unknown routes use a bilingual 404 page, with a real HTTP 404 supplied by Vercel.
 
 Explicit permanent redirects normalize HTML aliases and `/th` to `/th/`. Auth helper rewrites and existing card/admin routes remain intact. Do not add a global slash redirect: it can interfere with authentication callbacks and API routes.
 
@@ -25,10 +25,20 @@ When changing the production domain, update the origin in `scripts/build-seo.mjs
 
 ## External steps remaining
 
-1. Verify ownership of this exact production site in Google Search Console (URL-prefix property for the Vercel subdomain; DNS verification requires control of a custom domain).
+1. Search Console domain property `sc-domain:kannikabeauty.com` was inspected on 26 November 2026 using `abrnjic@gmail.com`; access is confirmed.
 2. Submit `https://www.kannikabeauty.com/sitemap.xml` and inspect `/` and `/th/`. Request indexing after Google can fetch them.
 3. Validate the deployed URLs with Google's Rich Results Test. Local JSON/schema tests are not a substitute for Google's eligibility checks.
-4. Complete Google Business verification separately. Website SEO does not resolve the former salon's listing or transfer its reviews to this new business.
+4. Keep the verified Google Business Profile and website contact details consistent. Website SEO does not transfer reviews from another business.
 5. After launch, replace illustrative photos with real salon work, maintain consistent business details across social profiles and Google, and review Search Console indexing and Core Web Vitals with real traffic. No ranking or rich-result placement is guaranteed.
 
 Official references: [localized pages](https://developers.google.com/search/docs/specialty/international/localized-versions), [local business structured data](https://developers.google.com/search/docs/appearance/structured-data/local-business), [sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap).
+
+## SEO review and approved release — 26 November 2026
+
+Search Console performance chart covers 1–23 November 2026: 266 property-level impressions, 1 click, CTR 0.4%, average position 9.3. These are early observations, not a ranking forecast. Page-level impressions have a different aggregation and must not be summed into the property total. Query rows may omit anonymised searches.
+
+Indexing report, last updated 16 November: 2 indexed pages and 4 deliberately excluded URLs: `/admin`, `/th/admin`, `/club`, `/th/club`. Do not remove those noindex rules or validate them as errors. Sitemap status is successful, last read 19 November, with 2 URLs. Core Web Vitals has insufficient real-user data for both device types as of 24 November. The public PageSpeed API returned a shared quota error; no Lighthouse score was obtained.
+
+The approved upgrade adds distinct, factual service details, reciprocal language alternates, canonical URLs, Service and BreadcrumbList structured data, real local photographs, related-service anchors, and homepage entry links. FAQs are visible content only; no FAQ rich-result eligibility is claimed. Service prices remain on the existing menu to avoid a second stale price list. No ratings, invented qualifications, awards or outcome guarantees are added.
+
+The homepage English title is more explicit about hair salon services and South Pattaya; Thai real-photo alt text is localised. Generated pages remain stable across repeat builds. `npm test` passed 122 tests. All eight new pages loaded their images and had no horizontal overflow at 390px; desktop and Thai mobile screenshots were inspected. The user approved production publication and submission of the refreshed sitemap on 26 November 2026. Google crawling and indexing are separate from successful deployment.

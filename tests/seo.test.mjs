@@ -23,7 +23,7 @@ for(const [lang,path,file] of [['en','/','dist/index.html'],['th','/th/','dist/t
  });
 }
 test('sitemap lists canonical public URLs; private screens permit crawlers to read noindex',()=>{
- const xml=read('dist/sitemap.xml');assert.deepEqual([...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>m[1]),[origin+'/',origin+'/th/']);
+ const xml=read('dist/sitemap.xml');const urls=[...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>m[1]);assert.equal(urls.length,10);assert.equal(new Set(urls).size,10);assert.ok(urls.includes(origin+'/'));assert.ok(urls.includes(origin+'/th/'));assert.ok(urls.every(url=>!url.includes('/admin')&&!url.includes('/club')));
  const robots=read('dist/robots.txt');assert.ok(robots.includes('Sitemap: '+origin+'/sitemap.xml'));assert.ok(!robots.includes('Disallow: /club'));assert.ok(!robots.includes('Disallow: /admin'));
  for(const path of ['admin.html','club.html','th/admin.html','th/club.html'])assert.match(read('dist/'+path),/name="robots" content="noindex,nofollow"/);
  assert.match(read('dist/404.html'),/noindex,follow/);

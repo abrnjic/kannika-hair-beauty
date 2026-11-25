@@ -1,0 +1,346 @@
+[
+  {
+    "slug": "hair-salon-pattaya",
+    "image": "kannika-client-styling",
+    "en": {
+      "name": "Haircuts, colour & styling",
+      "title": "Hair Salon in South Pattaya | Men's & Women's Hair | Kannika",
+      "description": "Men's and women's haircuts, hair colour, highlights and styling at Kannika, South Pattaya Soi 16. View the service menu and plan your appointment.",
+      "heading": "Your hair salon in South Pattaya",
+      "intro": "A simple trim, a different shape or a new colour: start with the look you want to wear. Kannika offers men's and women's haircuts, colouring, styling and hair care on South Pattaya Soi 16.",
+      "imageAlt": "A client's hair being styled inside Kannika salon in Pattaya",
+      "sections": [
+        {
+          "title": "Cuts and everyday styling",
+          "text": "Choose a men's haircut, a women's cut or a layered shape, then discuss your preferred finish with the salon. Wash and blow-dry, flat-iron styling, volume blow-dries and curls are listed in our service menu. Bring a reference photo if you have a particular look in mind.",
+          "items": [
+            "Men's and women's haircuts",
+            "Wash and blow-dry",
+            "Flat-iron styling and curls",
+            "Occasion styling and updos"
+          ]
+        },
+        {
+          "title": "Colour, texture and hair care",
+          "text": "The colour menu includes root touch-ups, grey coverage, single-process colour, bleaching, highlights and balayage. Straightening, perms and hair treatments are also available. Tell the salon about previous colour or chemical treatments so you can discuss the service and finish before your appointment.",
+          "items": [
+            "Root colour and grey coverage",
+            "Highlights and balayage",
+            "Straightening and perms",
+            "Hair treatments and scalp spa"
+          ]
+        }
+      ],
+      "questions": [
+        [
+          "What affects the price of a hair service?",
+          "The selected treatment, hair length and the work needed can affect the final price. Check the menu for the listed range and confirm the total with the salon before starting."
+        ],
+        [
+          "Can I combine a haircut with another service?",
+          "Tell the salon which services you want when you request an appointment. Your requested combination and time are confirmed by the salon."
+        ]
+      ]
+    },
+    "th": {
+      "name": "ตัดผม ทำสี และจัดแต่งทรงผม",
+      "title": "ร้านทำผมพัทยาใต้ | ตัดผมชายหญิง ทำสีผม | Kannika",
+      "description": "Kannika พัทยาใต้ซอย 16 บริการตัดผมชายหญิง ทำสี ไฮไลต์ จัดแต่งทรงผม และบำรุงผม ดูรายการราคาและวางแผนนัดหมายกับทางร้าน",
+      "heading": "ร้านทำผมพัทยาใต้",
+      "intro": "ไม่ว่าจะเล็มปลาย เปลี่ยนทรง หรือเปลี่ยนสีผม เริ่มต้นด้วยการพูดคุยถึงลุคที่คุณต้องการ Kannika ให้บริการตัดผมชายและหญิง ทำสี จัดแต่งทรงผม และบำรุงผมที่พัทยาใต้ซอย 16",
+      "imageAlt": "การจัดแต่งทรงผมให้ลูกค้าภายในร้าน Kannika พัทยา",
+      "sections": [
+        {
+          "title": "ตัดผมและจัดแต่งทรงประจำวัน",
+          "text": "เลือกตัดผมชาย ตัดผมหญิง หรือซอยผม แล้วแจ้งรูปแบบการจัดแต่งที่ต้องการกับทางร้าน มีบริการสระไดร์ หนีบผม ไดร์วอลลุ่ม และม้วนลอนตามรายการบริการ หากมีทรงที่ชอบ สามารถนำภาพตัวอย่างมาพูดคุยก่อนเริ่มบริการได้",
+          "items": [
+            "ตัดผมชายและหญิง",
+            "สระและไดร์ผม",
+            "หนีบผมและม้วนลอน",
+            "จัดแต่งทรงผมและเกล้าผม"
+          ]
+        },
+        {
+          "title": "สีผม การยืดดัด และการบำรุง",
+          "text": "รายการสีผมมีเติมสีโคน ปิดผมหงอก ทำสีพื้น ฟอกสี ไฮไลต์ และบาลายาจ รวมถึงบริการยืดผม ดัดผม และทรีตเมนต์ โปรดแจ้งประวัติการทำสีหรือเคมีให้ทางร้านทราบ เพื่อพูดคุยถึงบริการและลุคที่ต้องการก่อนนัดหมาย",
+          "items": [
+            "เติมสีโคนและปิดผมหงอก",
+            "ไฮไลต์และบาลายาจ",
+            "ยืดผมและดัดผม",
+            "ทรีตเมนต์และสปาหนังศีรษะ"
+          ]
+        }
+      ],
+      "questions": [
+        [
+          "ราคาทำผมขึ้นอยู่กับอะไร?",
+          "บริการที่เลือก ความยาวผม และขั้นตอนที่ต้องทำอาจมีผลต่อราคา โปรดดูช่วงราคาในรายการและยืนยันราคาสุดท้ายกับทางร้านก่อนเริ่มบริการ"
+        ],
+        [
+          "จองตัดผมพร้อมบริการอื่นได้ไหม?",
+          "แจ้งบริการทั้งหมดที่ต้องการเมื่อส่งคำขอนัดหมาย ทางร้านจะยืนยันบริการและเวลานัดหมายอีกครั้ง"
+        ]
+      ]
+    },
+    "imageWidth": 1120,
+    "imageHeight": 1400
+  },
+  {
+    "slug": "nail-salon-pattaya",
+    "image": "kannika-nails-20261124",
+    "en": {
+      "name": "Nails & nail extensions",
+      "title": "Nail Salon in Pattaya | Gel, Acrylic & Nail Art | Kannika",
+      "description": "Explore gel polish, PVC, gel and acrylic nail extensions, nail art and maintenance at Kannika in South Pattaya. See a real client nail design and the menu.",
+      "heading": "Nails and nail extensions in Pattaya",
+      "intro": "Choose your shape, length and finish at Kannika on South Pattaya Soi 16. Our nail services include gel polish, nail extensions, strengthening overlays, nail art and maintenance.",
+      "imageAlt": "Coral nail extensions with white bow nail art created at Kannika Pattaya",
+      "sections": [
+        {
+          "title": "Choose your nail service",
+          "text": "The menu includes PVC, gel and acrylic extensions, alongside single-colour gel polish for hands and feet. Bring a design reference and discuss the length and shape you prefer. The photograph on this page shows a client's coral nail extensions with white bow details at Kannika.",
+          "items": [
+            "Single-colour gel polish",
+            "PVC, gel and acrylic extensions",
+            "Nail strengthening overlay",
+            "Nail shaping and cuticle care"
+          ]
+        },
+        {
+          "title": "Finishes, infills and removal",
+          "text": "Cat-eye, flash or glitter, and syrup or jelly finishes are listed in the service menu. If you already have extensions or gel polish, tell the salon when booking. An infill, removal or a new set involves different work, so confirm the service and design before your visit.",
+          "items": [
+            "Nail art and special finishes",
+            "Nail extension infill",
+            "Gel polish removal",
+            "Nail extension removal"
+          ]
+        }
+      ],
+      "questions": [
+        [
+          "How do I get a price for my design?",
+          "View the menu, then show the salon your preferred length, shape and design. Confirm any extension, removal or design charges before the service."
+        ],
+        [
+          "Do you offer nail services for feet?",
+          "Yes. Gel polish for feet, cuticle care and foot care are listed. See our pedicure and foot care page for more information."
+        ]
+      ]
+    },
+    "th": {
+      "name": "ทำเล็บและต่อเล็บ",
+      "title": "ร้านทำเล็บพัทยา | เล็บเจล ต่อเล็บ เพ้นท์เล็บ | Kannika",
+      "description": "ทำเล็บที่ Kannika พัทยาใต้ซอย 16 มีสีเจล ต่อเล็บ PVC เจล อะคริลิก เพ้นท์เล็บ เติมโคน และถอดเล็บ ชมผลงานลูกค้าจริงและรายการบริการ",
+      "heading": "ทำเล็บและต่อเล็บที่พัทยาใต้",
+      "intro": "เลือกรูปทรง ความยาว และสีเล็บในแบบที่คุณชอบที่ Kannika พัทยาใต้ซอย 16 มีบริการทาสีเจล ต่อเล็บ เสริมหน้าเล็บ เพ้นท์เล็บ และดูแลเล็บเดิม",
+      "imageAlt": "ต่อเล็บสีคอรัลพร้อมลายโบสีขาว ผลงานที่ร้าน Kannika พัทยา",
+      "sections": [
+        {
+          "title": "เลือกบริการสำหรับเล็บของคุณ",
+          "text": "รายการบริการมีต่อเล็บ PVC เจล และอะคริลิก รวมถึงสีเจลสีเดียวสำหรับมือและเท้า สามารถนำภาพลายเล็บที่ชอบมาพูดคุยเรื่องความยาวและรูปทรงกับทางร้าน ภาพในหน้านี้เป็นเล็บลูกค้าสีคอรัลพร้อมลายโบสีขาวที่ร้าน Kannika",
+          "items": [
+            "ทาสีเจลสีเดียว",
+            "ต่อเล็บ PVC เจล และอะคริลิก",
+            "เสริมหน้าเล็บ",
+            "แต่งทรงเล็บและดูแลหนังรอบเล็บ"
+          ]
+        },
+        {
+          "title": "สีพิเศษ เติมโคน และถอดเล็บ",
+          "text": "มีสีแคทอาย สีแฟลชหรือกลิตเตอร์ และสีไซรัปหรือเจลลี่ตามรายการบริการ หากมีเล็บต่อหรือสีเจลเดิม โปรดแจ้งเมื่อจองคิว เพราะการเติมโคน ถอดเล็บ และต่อชุดใหม่มีขั้นตอนต่างกัน ควรยืนยันบริการและลายที่ต้องการก่อนมาใช้บริการ",
+          "items": [
+            "เพ้นท์เล็บและสีพิเศษ",
+            "เติมโคนเล็บต่อ",
+            "ถอดสีเจล",
+            "ถอดเล็บต่อ"
+          ]
+        }
+      ],
+      "questions": [
+        [
+          "สอบถามราคาลายเล็บที่ต้องการได้อย่างไร?",
+          "ดูรายการราคา แล้วส่งภาพความยาว รูปทรง และลายที่ต้องการให้ทางร้าน โปรดยืนยันค่าต่อเล็บ ถอดเล็บ หรือเพ้นท์ลายก่อนเริ่มบริการ"
+        ],
+        [
+          "มีบริการทำเล็บเท้าหรือไม่?",
+          "มีสีเจลเท้า ดูแลหนังรอบเล็บ และดูแลเท้า สามารถดูรายละเอียดเพิ่มเติมในหน้าดูแลเล็บเท้าและเท้า"
+        ]
+      ]
+    },
+    "imageWidth": 1120,
+    "imageHeight": 840
+  },
+  {
+    "slug": "eyelash-extensions-pattaya",
+    "image": "kannika-lashes-20261124",
+    "en": {
+      "name": "Eyelash extensions",
+      "title": "Eyelash Extensions in Pattaya | Natural & Volume | Kannika",
+      "description": "Natural, volume, hybrid and wispy eyelash extensions at Kannika, South Pattaya Soi 16. View real lash work, compare styles and contact the salon to book.",
+      "heading": "Eyelash extensions in South Pattaya",
+      "intro": "From a natural finish to a fuller lash look, explore the eyelash extension styles in Kannika's menu. The salon is on South Pattaya Soi 16, with hair, nails and foot care available in the same place.",
+      "imageAlt": "Close-up of a client's eyelash extensions at Kannika Hair and Beauty Pattaya",
+      "sections": [
+        {
+          "title": "A style to discuss with the salon",
+          "text": "Natural and soft natural styles suit a request for a lighter-looking finish. The menu also lists YY / 2D, 3D Volume, Hybrid, Wispy, Cat Eye / Fox Eye and Mega / Russian Volume. Bring a reference photo and discuss the fullness and shape you want before choosing a service.",
+          "items": [
+            "Natural and soft natural",
+            "YY / 2D and 3D Volume",
+            "Hybrid and Wispy",
+            "Cat Eye / Fox Eye and Mega / Russian Volume"
+          ]
+        },
+        {
+          "title": "Planning your lash appointment",
+          "text": "Tell the salon if you have existing extensions and ask which service to book. Confirm the style, price and appointment time directly with the salon. The image on this page is a close-up of a client's lash work at Kannika; it is a reference for that individual result, rather than a promise of an identical finish.",
+          "items": [
+            "Share your preferred style",
+            "Mention existing lash extensions",
+            "Confirm the service and price",
+            "Ask the salon about aftercare"
+          ]
+        }
+      ],
+      "questions": [
+        [
+          "Can I choose a natural-looking style?",
+          "Natural and soft natural options are listed in our menu. Discuss your preferred finish with the salon when you book."
+        ],
+        [
+          "Is an online request a confirmed lash appointment?",
+          "No. Your preferred date and service are sent as a request. The salon confirms the appointment separately."
+        ]
+      ]
+    },
+    "th": {
+      "name": "ต่อขนตา",
+      "title": "ต่อขนตาพัทยา | ธรรมชาติ วอลลุ่ม ไฮบริด | Kannika",
+      "description": "ต่อขนตาที่ Kannika พัทยาใต้ซอย 16 มีแบบธรรมชาติ วอลลุ่ม ไฮบริด และวิสปี้ ชมผลงานลูกค้าจริง ดูรายการราคา และติดต่อจองคิวกับทางร้าน",
+      "heading": "ต่อขนตาที่พัทยาใต้",
+      "intro": "เลือกดูแบบต่อขนตาของ Kannika ตั้งแต่ลุคธรรมชาติไปจนถึงขนตาที่ดูเต็มขึ้น ร้านอยู่ที่พัทยาใต้ซอย 16 พร้อมบริการทำผม ทำเล็บ และดูแลเท้าในที่เดียว",
+      "imageAlt": "ภาพระยะใกล้ของงานต่อขนตาลูกค้าที่ร้าน Kannika Hair and Beauty พัทยา",
+      "sections": [
+        {
+          "title": "พูดคุยถึงรูปแบบที่คุณชอบ",
+          "text": "แบบ Natural และ Soft Natural เป็นตัวเลือกสำหรับผู้ที่ต้องการลุคเบาเป็นธรรมชาติ ในรายการยังมี YY / 2D, 3D Volume, Hybrid, Wispy, Cat Eye / Fox Eye และ Mega / Russian Volume สามารถนำภาพตัวอย่างมาพูดคุยเรื่องความหนาและทรงที่ต้องการก่อนเลือกบริการ",
+          "items": [
+            "Natural และ Soft Natural",
+            "YY / 2D และ 3D Volume",
+            "Hybrid และ Wispy",
+            "Cat Eye / Fox Eye และ Mega / Russian Volume"
+          ]
+        },
+        {
+          "title": "วางแผนก่อนนัดต่อขนตา",
+          "text": "หากมีขนตาต่อเดิม โปรดแจ้งทางร้านและสอบถามว่าควรเลือกบริการใด ยืนยันรูปแบบ ราคา และเวลานัดกับทางร้านก่อนมา ภาพในหน้านี้เป็นผลงานต่อขนตาของลูกค้ารายหนึ่งที่ Kannika ใช้เป็นตัวอย่างผลงาน โดยผลลัพธ์ของแต่ละคนอาจแตกต่างกัน",
+          "items": [
+            "แจ้งรูปแบบขนตาที่ต้องการ",
+            "แจ้งหากมีขนตาต่อเดิม",
+            "ยืนยันบริการและราคา",
+            "สอบถามวิธีดูแลหลังต่อขนตา"
+          ]
+        }
+      ],
+      "questions": [
+        [
+          "มีแบบที่ดูเป็นธรรมชาติไหม?",
+          "ในรายการมีแบบ Natural และ Soft Natural สามารถพูดคุยถึงลุคที่ต้องการกับทางร้านเมื่อจองคิว"
+        ],
+        [
+          "ส่งคำขอออนไลน์แล้วถือว่ายืนยันคิวหรือไม่?",
+          "ยังไม่ถือว่ายืนยัน วันและบริการที่เลือกเป็นคำขอนัดหมาย ทางร้านจะยืนยันคิวอีกครั้งแยกต่างหาก"
+        ]
+      ]
+    },
+    "imageWidth": 1120,
+    "imageHeight": 1805
+  },
+  {
+    "slug": "pedicure-foot-care-pattaya",
+    "image": "kannika-salon-interior",
+    "en": {
+      "name": "Pedicure & foot care",
+      "title": "Pedicure & Foot Care in Pattaya | Women & Men | Kannika",
+      "description": "Foot care for women and men at Kannika, South Pattaya Soi 16. Explore toenail grooming, cuticle care, foot spa, heel exfoliation and gel polish for feet.",
+      "heading": "Pedicure and foot care in Pattaya",
+      "intro": "Make time for foot and toenail care at Kannika on South Pattaya Soi 16. We welcome women and men for grooming and foot care, alongside the salon's hair, nails and lash services.",
+      "imageAlt": "Interior of Kannika Hair and Beauty salon in South Pattaya",
+      "sections": [
+        {
+          "title": "Choose the care you need",
+          "text": "The service menu includes cuticle care for hands and feet, foot spa and heel exfoliation, and gel polish for feet. Tell the salon whether you want toenail grooming, foot care, polish or a combination so it can confirm the appropriate booking.",
+          "items": [
+            "Toenail shaping and grooming",
+            "Cuticle care for feet",
+            "Foot spa and heel exfoliation",
+            "Single-colour gel polish for feet"
+          ]
+        },
+        {
+          "title": "For women and men",
+          "text": "Foot care is available for both women and men. You can discuss a grooming-only visit or add a polish finish according to the services listed. If you already have gel polish on your toenails, mention it when requesting a time so the salon can confirm whether removal is needed.",
+          "items": [
+            "Explain the finish you prefer",
+            "Mention existing gel polish",
+            "Check the relevant menu items",
+            "Confirm the final service with the salon"
+          ]
+        }
+      ],
+      "questions": [
+        [
+          "Do men need to book a different service?",
+          "The salon offers foot care for men and women. Describe what you need when you contact the salon so it can confirm the service."
+        ],
+        [
+          "Does the foot care price include gel polish?",
+          "The menu lists foot care and gel polish as service items. Confirm your chosen combination and total price with the salon before starting."
+        ]
+      ]
+    },
+    "th": {
+      "name": "ดูแลเล็บเท้าและเท้า",
+      "title": "ดูแลเล็บเท้าและสปาเท้าพัทยา | ชายและหญิง | Kannika",
+      "description": "ดูแลเล็บเท้าและเท้าสำหรับชายและหญิงที่ Kannika พัทยาใต้ซอย 16 มีแต่งทรงเล็บ ดูแลหนังรอบเล็บ สปาเท้า ขัดส้นเท้า และสีเจลเท้าตามรายการบริการ",
+      "heading": "ดูแลเล็บเท้าและเท้าที่พัทยาใต้",
+      "intro": "ให้เวลากับการดูแลเท้าและเล็บเท้าที่ Kannika พัทยาใต้ซอย 16 มีบริการสำหรับผู้หญิงและผู้ชาย พร้อมทำผม ทำเล็บ และต่อขนตาในร้านเดียวกัน",
+      "imageAlt": "บรรยากาศภายในร้าน Kannika Hair and Beauty ที่พัทยาใต้",
+      "sections": [
+        {
+          "title": "เลือกการดูแลที่ต้องการ",
+          "text": "รายการบริการมีดูแลหนังรอบเล็บมือและเท้า สปาเท้าและขัดส้นเท้า รวมถึงสีเจลเท้า โปรดแจ้งว่าต้องการแต่งทรงเล็บ ดูแลเท้า ทาสี หรือทำหลายบริการร่วมกัน เพื่อให้ทางร้านยืนยันบริการและเวลานัดที่เหมาะสม",
+          "items": [
+            "แต่งทรงและดูแลเล็บเท้า",
+            "ดูแลหนังรอบเล็บเท้า",
+            "สปาเท้าและขัดส้นเท้า",
+            "ทาสีเจลเท้าสีเดียว"
+          ]
+        },
+        {
+          "title": "บริการสำหรับผู้หญิงและผู้ชาย",
+          "text": "ผู้หญิงและผู้ชายสามารถใช้บริการดูแลเท้าได้ พูดคุยกับทางร้านได้ว่าต้องการดูแลและแต่งทรงอย่างเดียวหรือเพิ่มสีตามรายการบริการ หากมีสีเจลเดิมที่เล็บเท้า โปรดแจ้งเมื่อส่งคำขอนัดหมาย เพื่อให้ทางร้านยืนยันว่าต้องถอดสีเดิมหรือไม่",
+          "items": [
+            "แจ้งรูปแบบการดูแลที่ต้องการ",
+            "แจ้งหากมีสีเจลเดิม",
+            "ตรวจสอบรายการบริการ",
+            "ยืนยันบริการสุดท้ายกับทางร้าน"
+          ]
+        }
+      ],
+      "questions": [
+        [
+          "ผู้ชายต้องจองบริการแยกต่างหากไหม?",
+          "มีบริการดูแลเท้าสำหรับทั้งชายและหญิง โปรดแจ้งสิ่งที่ต้องการเมื่อสอบถามคิว เพื่อให้ทางร้านยืนยันบริการ"
+        ],
+        [
+          "ราคาดูแลเท้ารวมสีเจลหรือไม่?",
+          "ในรายการมีบริการดูแลเท้าและสีเจลแยกเป็นรายการ โปรดยืนยันบริการที่ต้องการและราคารวมกับทางร้านก่อนเริ่ม"
+        ]
+      ]
+    },
+    "imageWidth": 1120,
+    "imageHeight": 1400
+  }
+]
